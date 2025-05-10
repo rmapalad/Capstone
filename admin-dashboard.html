@@ -1,0 +1,3891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Property Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --info-color: #3b82f6;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR STYLES ===== */
+        /* Main Sidebar Container - Controls overall sidebar appearance and positioning */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+            min-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            color: white;
+            z-index: 1040;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        /* Sidebar Header - Contains title and close button in mobile view */
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Sidebar Title - Text in the header */
+        .sidebar-title {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Sidebar Body - Main content area of sidebar */
+        .sidebar-body {
+            padding: 1.5rem;
+        }
+
+        /* Sidebar Brand - Logo/title at top of sidebar */
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Sidebar Navigation Links */
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Sidebar Link Hover State */
+        .sidebar .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Active Sidebar Link */
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar Link Icons */
+        .sidebar .nav-link i {
+            font-size: 1.25rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* ===== RESPONSIVE STYLES ===== */
+        /* Mobile View Styles (below 768px) */
+        @media (max-width: 768px) {
+            /* Hide sidebar by default in mobile */
+            .sidebar {
+                transform: translateX(-100%);
+                display: block;
+            }
+
+            /* Show sidebar when active in mobile */
+            .sidebar.show {
+                transform: translateX(0);
+                display: block;
+            }
+
+            /* Adjust main content for mobile */
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            /* Mobile navbar adjustments */
+            .navbar {
+                padding: 0.75rem 1rem;
+            }
+
+            /* White close button for dark sidebar */
+            .btn-close {
+                filter: brightness(0) invert(1);
+            }
+        }
+
+        /* Desktop View Styles (above 768px) */
+        @media (min-width: 769px) {
+            /* Always show sidebar in desktop */
+            .sidebar {
+                transform: none !important;
+                display: block !important;
+            }
+
+            /* Adjust main content for sidebar */
+            .main-content {
+                margin-left: var(--sidebar-width);
+            }
+
+            /* Hide mobile-specific elements */
+            .sidebar-header {
+                display: none !important;
+            }
+
+            .navbar-toggler {
+                display: none !important;
+            }
+        }
+
+        /* Enhanced Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 2rem;
+            transition: margin-left 0.3s linear;
+            min-height: 100vh;
+            background-color: #f8fafc;
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .container-fluid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .navbar .container-fluid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover .user-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        #userInfo {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .btn-outline-primary {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-outline-primary i {
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+        }
+
+        /* Enhanced Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s linear;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.25rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .stat-label {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            margin-top: auto;
+            padding-top: 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-trend.positive {
+            color: var(--success-color);
+        }
+
+        .stat-trend.negative {
+            color: var(--danger-color);
+        }
+
+        /* Dashboard Charts */
+        .dashboard-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-actions button {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-actions button:hover {
+            color: var(--primary-color);
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--dark-color);
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+                margin-left: 0;
+            }
+
+            .container-fluid {
+                padding: 0 0.75rem;
+            }
+
+            .section {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .section-header {
+                margin-bottom: 1.5rem;
+                padding-bottom: 0.75rem;
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .stat-icon {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .dashboard-charts {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .chart-card {
+                padding: 1.25rem;
+            }
+
+            .chart-header {
+                margin-bottom: 1rem;
+            }
+
+            .chart-title {
+                font-size: 1.1rem;
+            }
+
+            .recent-activity {
+                padding: 1.25rem;
+            }
+
+            .activity-item {
+                padding: 0.75rem 0;
+            }
+
+            .activity-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .activity-title {
+                font-size: 0.95rem;
+            }
+
+            .activity-time {
+                font-size: 0.8rem;
+            }
+
+            .navbar {
+                padding: 0.75rem 1rem;
+                margin-bottom: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .user-info {
+                padding: 0.4rem 0.75rem;
+            }
+
+            .user-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            #userInfo {
+                font-size: 0.95rem;
+            }
+
+            .btn-outline-primary {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-outline-primary i {
+                font-size: 0.9rem;
+            }
+
+            .table-responsive {
+                margin: 0 -1.25rem;
+                padding: 0 1.25rem;
+                width: calc(100% + 2.5rem);
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .action-buttons .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .action-buttons .btn i {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Additional Tablet Responsiveness */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .container-fluid {
+                padding: 0 1rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-charts {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        /* Enhanced Button Styles */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+                border-radius: 10px;
+            transition: all 0.3s linear;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+                color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Add smooth transitions */
+        .section {
+            transition: all 0.3s linear;
+        }
+
+        /* Add hover effects */
+        .card {
+            transition: all 0.3s linear;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Add loading animation */
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25rem;
+        }
+
+        /* Add toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            min-width: 300px;
+            border: none;
+        }
+
+        .toast-header {
+            border-bottom: none;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .toast-body {
+            padding: 1rem;
+        }
+
+        /* Account Management Responsive Styles */
+        @media (max-width: 768px) {
+            .account-filters {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .account-filters .col-md-4 {
+                width: 100%;
+            }
+
+            .account-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .account-actions .btn {
+                width: 100%;
+            }
+
+            .table-responsive {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                width: calc(100% + 2rem);
+            }
+
+            .table th,
+            .table td {
+                white-space: nowrap;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+            }
+
+            .action-buttons .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-icon {
+                font-size: 1.75rem;
+            }
+
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .account-filters {
+                flex-wrap: wrap;
+            }
+
+            .account-filters .col-md-4 {
+                width: 50%;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons .btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Enhanced Account Management Section */
+        #accountManagementSection .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #accountManagementSection .card-body {
+            padding: 1.5rem;
+        }
+
+        #accountManagementSection .table {
+            margin-bottom: 0;
+        }
+
+        #accountManagementSection .table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+        }
+
+        #accountManagementSection .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        #accountManagementSection .badge {
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+
+        #accountManagementSection .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        #accountManagementSection .form-control,
+        #accountManagementSection .form-select {
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 0.625rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        #accountManagementSection .form-control:focus,
+        #accountManagementSection .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        #accountManagementSection .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #accountManagementSection .btn-group .btn {
+            padding: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        #accountManagementSection .btn-group .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        #accountManagementSection .btn-group .btn i {
+            font-size: 0.875rem;
+        }
+
+        /* Modal Enhancements */
+        #accountManagementSection .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #accountManagementSection .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 1.25rem;
+        }
+
+        #accountManagementSection .modal-body {
+            padding: 1.5rem;
+        }
+
+        #accountManagementSection .modal-footer {
+            padding: 1.25rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Search Input Enhancement */
+        #accountManagementSection .input-group {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #accountManagementSection .input-group .form-control {
+            border-right: none;
+        }
+
+        #accountManagementSection .input-group .btn {
+            border-left: none;
+            background-color: #f8fafc;
+            color: #6b7280;
+        }
+
+        #accountManagementSection .input-group .btn:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        /* Mobile-First Account Management Styles */
+        @media (max-width: 768px) {
+            /* Header and Actions */
+            #accountManagementSection .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            #accountManagementSection .account-actions {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            #accountManagementSection .account-actions .btn {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Filters Section */
+            #accountManagementSection .account-filters {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            #accountManagementSection .account-filters .col-md-4 {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            #accountManagementSection .form-label {
+                font-size: 0.875rem;
+                margin-bottom: 0.25rem;
+            }
+
+            #accountManagementSection .form-select,
+            #accountManagementSection .form-control {
+                height: 2.75rem;
+                font-size: 0.875rem;
+            }
+
+            /* Statistics Cards */
+            #accountManagementSection .stat-card {
+                padding: 1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            #accountManagementSection .stat-value {
+                font-size: 1.5rem;
+                margin: 0.5rem 0;
+            }
+
+            #accountManagementSection .stat-icon {
+                font-size: 1.5rem;
+            }
+
+            #accountManagementSection .stat-label {
+                font-size: 0.75rem;
+            }
+
+            /* Table Improvements */
+            #accountManagementSection .table-responsive {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                width: calc(100% + 2rem);
+                border-radius: 0;
+            }
+
+            #accountManagementSection .table {
+                font-size: 0.875rem;
+            }
+
+            #accountManagementSection .table th {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.75rem;
+                white-space: nowrap;
+            }
+
+            #accountManagementSection .table td {
+                padding: 0.75rem 0.5rem;
+                vertical-align: middle;
+            }
+
+            /* Action Buttons */
+            #accountManagementSection .action-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                justify-content: flex-start;
+            }
+
+            #accountManagementSection .action-buttons .btn {
+                padding: 0.375rem;
+                font-size: 0.75rem;
+                min-width: 2rem;
+                height: 2rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #accountManagementSection .action-buttons .btn i {
+                font-size: 0.75rem;
+            }
+
+            /* Badge Improvements */
+            #accountManagementSection .badge {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            /* Modal Improvements */
+            #accountManagementSection .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+
+            #accountManagementSection .modal-content {
+                border-radius: 12px;
+            }
+
+            #accountManagementSection .modal-header {
+                padding: 1rem;
+            }
+
+            #accountManagementSection .modal-body {
+                padding: 1rem;
+            }
+
+            #accountManagementSection .modal-footer {
+                padding: 1rem;
+            }
+
+            /* Search Input */
+            #accountManagementSection .input-group {
+                flex-wrap: nowrap;
+            }
+
+            #accountManagementSection .input-group .form-control {
+                flex: 1;
+                min-width: 0;
+            }
+
+            #accountManagementSection .input-group .btn {
+                padding: 0.5rem;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Enhanced Mobile Table View */
+        @media (max-width: 576px) {
+            #accountManagementSection .table-responsive {
+                border: none;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+
+            #accountManagementSection .table {
+                display: block;
+                width: 100%;
+            }
+
+            #accountManagementSection .table thead {
+                display: none;
+            }
+
+            #accountManagementSection .table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            #accountManagementSection .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            #accountManagementSection .table td {
+                display: flex;
+                padding: 0.5rem 0;
+                border: none;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            #accountManagementSection .table td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #4b5563;
+                margin-right: 1rem;
+            }
+
+            #accountManagementSection .table td:last-child {
+                border-top: 1px solid #e5e7eb;
+                margin-top: 0.5rem;
+                padding-top: 0.75rem;
+            }
+
+            #accountManagementSection .action-buttons {
+                justify-content: flex-end;
+            }
+        }
+
+        /* Account Color Coding Styles */
+        #accountManagementSection .account-card {
+            position: relative;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        #accountManagementSection .account-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Role-based colors */
+        #accountManagementSection .account-card[data-role="admin"] {
+            border-left-color: #6366f1;
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.05), transparent);
+        }
+
+        #accountManagementSection .account-card[data-role="staff"] {
+            border-left-color: #8b5cf6;
+            background: linear-gradient(to right, rgba(139, 92, 246, 0.05), transparent);
+        }
+
+        #accountManagementSection .account-card[data-role="tenant"] {
+            border-left-color: #10b981;
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.05), transparent);
+        }
+
+        /* Status-based colors */
+        #accountManagementSection .account-card[data-status="active"] {
+            border-right: 4px solid #10b981;
+        }
+
+        #accountManagementSection .account-card[data-status="pending"] {
+            border-right: 4px solid #f59e0b;
+        }
+
+        #accountManagementSection .account-card[data-status="suspended"] {
+            border-right: 4px solid #ef4444;
+        }
+
+        /* Enhanced Mobile Table View with Color Coding */
+        @media (max-width: 576px) {
+            #accountManagementSection .table-responsive {
+                border: none;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+
+            #accountManagementSection .table {
+                display: block;
+                width: 100%;
+            }
+
+            #accountManagementSection .table thead {
+                display: none;
+            }
+
+            #accountManagementSection .table tbody {
+                display: block;
+                width: 100%;
+            }
+
+            #accountManagementSection .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            #accountManagementSection .table td {
+                display: flex;
+                padding: 0.5rem 0;
+                border: none;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            #accountManagementSection .table td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #4b5563;
+                margin-right: 1rem;
+            }
+
+            #accountManagementSection .table td:last-child {
+                border-top: 1px solid #e5e7eb;
+                margin-top: 0.5rem;
+                padding-top: 0.75rem;
+            }
+
+            /* Role and Status Indicators */
+            #accountManagementSection .role-indicator {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            #accountManagementSection .role-indicator i {
+                margin-right: 0.25rem;
+            }
+
+            #accountManagementSection .role-indicator.admin {
+                background-color: rgba(99, 102, 241, 0.1);
+                color: #6366f1;
+            }
+
+            #accountManagementSection .role-indicator.staff {
+                background-color: rgba(139, 92, 246, 0.1);
+                color: #8b5cf6;
+            }
+
+            #accountManagementSection .role-indicator.tenant {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: #10b981;
+            }
+
+            #accountManagementSection .status-indicator {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            #accountManagementSection .status-indicator i {
+                margin-right: 0.25rem;
+            }
+
+            #accountManagementSection .status-indicator.active {
+                background-color: rgba(16, 185, 129, 0.1);
+                color: #10b981;
+            }
+
+            #accountManagementSection .status-indicator.pending {
+                background-color: rgba(245, 158, 11, 0.1);
+                color: #f59e0b;
+            }
+
+            #accountManagementSection .status-indicator.suspended {
+                background-color: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+        }
+
+        /* Payment History Styles */
+        .payment-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .payment-card[data-status="completed"] {
+            border-left-color: #10b981;
+        }
+
+        .payment-card[data-status="pending"] {
+            border-left-color: #f59e0b;
+        }
+
+        .payment-card[data-status="failed"] {
+            border-left-color: #ef4444;
+        }
+
+        .payment-method-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .payment-method-indicator i {
+            margin-right: 0.5rem;
+        }
+
+        .payment-method-indicator.credit_card {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .payment-method-indicator.bank_transfer {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .payment-method-indicator.cash {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-indicator i {
+            margin-right: 0.5rem;
+        }
+
+        .status-indicator.completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-indicator.pending {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .status-indicator.failed {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .payment-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .detail-item label {
+            font-weight: 500;
+            color: #4b5563;
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .payment-filters {
+                flex-direction: column;
+            }
+            
+            .payment-filters .col-md-3 {
+                width: 100%;
+            }
+            
+            .payment-actions {
+                width: 100%;
+            }
+            
+            .payment-actions .btn {
+                width: 100%;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+        }
+
+        /* Payment History Styles */
+        .payment-method-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .payment-method-badge.credit_card {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .payment-method-badge.bank_transfer {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .payment-method-badge.cash {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .section-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .section-actions .btn {
+                width: 100%;
+            }
+            
+            .table-responsive {
+                margin: 0 -1rem;
+            }
+            
+            .table th {
+                display: none;
+            }
+            
+            .table td {
+                display: block;
+                text-align: right;
+                padding: 0.5rem 1rem;
+                border: none;
+            }
+            
+            .table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+            }
+            
+            .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header d-md-none">
+            <h5 class="sidebar-title">Property Management</h5>
+            <button type="button" class="btn-close" onclick="toggleSidebar()"></button>
+        </div>
+        <div class="sidebar-body">
+        <div class="sidebar-brand">
+            <i class="fas fa-building me-2"></i>
+            Property Management
+        </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                        <i class="fas fa-chart-line me-2"></i>
+                        <span>Dashboard</span>
+                </a>
+            </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('accountManagement')">
+                        <i class="fas fa-user-cog me-2"></i>
+                        <span>Account Management</span>
+                </a>
+            </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('complaints')">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <span>Complaints</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('paymentHistory')">
+                        <i class="fas fa-history me-2"></i>
+                        <span>Payment History</span>
+                </a>
+            </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('manageListing')">
+                        <i class="fas fa-list-alt me-2"></i>
+                        <span>Manage Listing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('booking')">
+                        <i class="fas fa-calendar-check me-2"></i>
+                        <span>Booking</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('visitorLogs')">
+                        <i class="fas fa-clipboard-list me-2"></i>
+                        <span>Visitor & Tenant Logs</span>
+                </a>
+            </li>
+        </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <nav class="navbar navbar-expand-md bg-white shadow-sm mb-4">
+            <div class="container-fluid">
+                <button class="navbar-toggler d-md-none" type="button" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                        <span id="userInfo" class="ms-2">Welcome, Admin</span>
+            </div>
+                </div>
+                <button class="btn btn-outline-primary" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+        </nav>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section">
+            <div class="container-fluid">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Dashboard Overview
+                    </h2>
+                </div>
+
+                <!-- Notification Area -->
+                <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bell me-3 fs-4"></i>
+                        <div>
+                            <strong>Notifications:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>3 new maintenance requests pending</li>
+                                <li>2 upcoming rent payments due tomorrow</li>
+                                <li>New event booking request for Conference Room</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-value" id="availableApartments">0</div>
+                        <div class="stat-label">Available Apartments</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="apartmentTrend">Loading...</span>
+                        </div>
+                    </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                        <div class="stat-value" id="totalTenants">0</div>
+                        <div class="stat-label">Total Tenants</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8% from last month</span>
+                        </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                    </div>
+                        <div class="stat-value" id="totalBookings">0</div>
+                        <div class="stat-label">Event Bookings</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>15% from last month</span>
+                        </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                        <div class="stat-value" id="monthlyRevenue">$0</div>
+                        <div class="stat-label">Monthly Revenue</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>15% from last month</span>
+                        </div>
+                </div>
+            </div>
+
+                <div class="row mb-4">
+                    <!-- Latest Payments -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-money-bill-wave me-2"></i>
+                                    Latest Payments
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Tenant</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="latestPaymentsList">
+                                            <!-- Payments will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    Upcoming Events
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Event</th>
+                                                <th>Date</th>
+                                                <th>Location</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="upcomingEventsList">
+                                            <!-- Events will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Revenue Overview</h3>
+                            <div class="chart-actions">
+                                <button title="Refresh" class="btn btn-link">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Property Status</h3>
+                            <div class="chart-actions">
+                                <button title="Refresh" class="btn btn-link">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <canvas id="propertyStatusChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-history"></i>
+                            Recent Activity
+                        </h3>
+                    </div>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">New tenant registered</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Maintenance request completed</div>
+                                <div class="activity-time">5 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Payment received</div>
+                                <div class="activity-time">1 day ago</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div id="propertiesSection" class="section" style="display: none;">
+            <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-home me-2"></i>Properties</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPropertyModal">
+                        <i class="fas fa-plus"></i> Add Property
+                </button>
+            </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-value" id="totalProperties">0</div>
+                    <div class="stat-label">Total Properties</div>
+                </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="stat-value" id="availableProperties">0</div>
+                    <div class="stat-label">Available Properties</div>
+                </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-home"></i>
+                    </div>
+                    <div class="stat-value" id="occupiedProperties">0</div>
+                    <div class="stat-label">Occupied Properties</div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Tenant</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="propertiesList">
+                                <!-- Properties will be loaded here -->
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tenants Section -->
+        <div id="tenantsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-users me-2"></i>Tenants</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTenantModal">
+                        <i class="fas fa-plus"></i> Add Tenant
+                    </button>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-value" id="totalTenants">0</div>
+                            <div class="stat-label">Total Tenants</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-value" id="activeTenants">0</div>
+                            <div class="stat-label">Active Tenants</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="stat-value" id="pendingTenants">0</div>
+                            <div class="stat-label">Pending Tenants</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Property</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tenantsList">
+                                    <!-- Tenants will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maintenance Section -->
+        <div id="maintenanceSection" class="section" style="display: none;">
+            <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-tools me-2"></i>Maintenance Requests</h2>
+            </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-value" id="totalRequests">0</div>
+                    <div class="stat-label">Total Requests</div>
+                </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="pendingRequests">0</div>
+                    <div class="stat-label">Pending Requests</div>
+                </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-value" id="completedRequests">0</div>
+                    <div class="stat-label">Completed Requests</div>
+                        </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Tenant</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="maintenanceList">
+                                <!-- Maintenance requests will be loaded here -->
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div id="paymentsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-money-bill-wave me-2"></i>Payments</h2>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-value" id="totalRevenue">$0</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-value" id="monthlyRevenue">$0</div>
+                            <div class="stat-label">Monthly Revenue</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-value" id="pendingPayments">0</div>
+                            <div class="stat-label">Pending Payments</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Tenant</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentsList">
+                                    <!-- Payments will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reportsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-file-alt me-2"></i>Reports</h2>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">Revenue Report</h5>
+                                <canvas id="revenueReportChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title mb-4">Occupancy Report</h5>
+                                <canvas id="occupancyReportChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Management Section -->
+        <div id="accountManagementSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <h2><i class="fas fa-user-cog me-2"></i>Account Management</h2>
+                    <div class="d-flex gap-2 account-actions">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAccountModal">
+                            <i class="fas fa-plus me-2"></i>Add Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 account-filters">
+                            <div class="col-md-4">
+                                <label for="roleFilter" class="form-label">Filter by Role</label>
+                                <select class="form-select" id="roleFilter" onchange="filterAccounts()">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="staff">Staff</option>
+                                    <option value="tenant">Tenant</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="statusFilter" class="form-label">Filter by Status</label>
+                                <select class="form-select" id="statusFilter" onchange="filterAccounts()">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="suspended">Suspended</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="searchAccount" class="form-label">Search</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchAccount" placeholder="Search by username or email" onkeyup="filterAccounts()">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="resetFilters()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-value" id="totalAccounts">0</div>
+                            <div class="stat-label">Total Accounts</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-value" id="activeAccounts">0</div>
+                            <div class="stat-label">Active Accounts</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="stat-value" id="pendingAccounts">0</div>
+                            <div class="stat-label">Pending Accounts</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-slash"></i>
+                            </div>
+                            <div class="stat-value" id="suspendedAccounts">0</div>
+                            <div class="stat-label">Suspended Accounts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accounts Table -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Created At</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accountsList">
+                                    <!-- Accounts will be loaded here with data-label attributes -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaints Section -->
+        <div id="complaintsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-exclamation-circle me-2"></i>Complaints</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Complainant</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="complaintsList">
+                                    <!-- Complaints will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment History Section -->
+        <div id="paymentHistorySection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <!-- Header with Quick Actions -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-history me-2"></i>Payment History</h2>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" onclick="showRecordPaymentModal()">
+                            <i class="fas fa-plus me-2"></i>Quick Record Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Payment Statistics Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-value" id="total-payments">0</div>
+                            <div class="stat-label">Total Payments</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-chart-line me-1"></i>
+                                <span id="total-trend">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-value text-success" id="completed-payments">0</div>
+                            <div class="stat-label">Completed</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up me-1"></i>
+                                <span id="completed-trend">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-warning">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-value text-warning" id="pending-payments">0</div>
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-trend">
+                                <i class="fas fa-clock me-1"></i>
+                                <span id="pending-trend">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-icon text-danger">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="stat-value text-danger" id="failed-payments">0</div>
+                            <div class="stat-label">Failed</div>
+                            <div class="stat-trend negative">
+                                <i class="fas fa-arrow-down me-1"></i>
+                                <span id="failed-trend">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="payment-status-filter" onchange="filterPayments()">
+                                    <option value="">All Status</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Payment Method</label>
+                                <select class="form-select" id="payment-method-filter" onchange="filterPayments()">
+                                    <option value="">All Methods</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date Range</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="payment-date-from" onchange="filterPayments()">
+                                    <span class="input-group-text">to</span>
+                                    <input type="date" class="form-control" id="payment-date-to" onchange="filterPayments()">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">&nbsp;</label>
+                                <button class="btn btn-outline-secondary w-100" onclick="resetPaymentFilters()">
+                                    <i class="fas fa-undo me-2"></i>Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payments Table -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Tenant</th>
+                                        <th>Amount</th>
+                                        <th>Payment Method</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payments-table-body">
+                                    <!-- Payment rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Listing Section -->
+        <div id="manageListingSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-list-alt me-2"></i>Manage Listing</h2>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addListingModal">
+                        <i class="fas fa-plus"></i> Add Listing
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Type</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listingsList">
+                                    <!-- Listings will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Section -->
+        <div id="bookingSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-calendar-check me-2"></i>Booking</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Facility</th>
+                                        <th>Booked By</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookingsList">
+                                    <!-- Bookings will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitor & Tenant Logs Section -->
+        <div id="visitorLogsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-clipboard-list me-2"></i>Visitor & Tenant Logs</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Purpose</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="visitorLogsList">
+                                    <!-- Visitor logs will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Account Modal -->
+    <div class="modal fade" id="createAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>Create New Account
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createAccountForm" onsubmit="createAccount(event)">
+                        <div class="mb-3">
+                            <label for="newUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="newUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="newEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newRole" class="form-label">Role</label>
+                            <select class="form-select" id="newRole" required>
+                                <option value="admin">Admin</option>
+                                <option value="staff">Staff</option>
+                                <option value="tenant">Tenant</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newStatus" class="form-label">Status</label>
+                            <select class="form-select" id="newStatus" required>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Account Modal -->
+    <div class="modal fade" id="editAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-edit me-2"></i>Edit Account
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editAccountForm" onsubmit="updateAccount(event)">
+                        <div class="mb-3">
+                            <label for="editAccountId" class="form-label">Account ID</label>
+                            <input type="text" class="form-control" id="editAccountId" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="editUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRole" class="form-label">Role</label>
+                            <select class="form-select" id="editRole" required>
+                                <option value="admin">Admin</option>
+                                <option value="staff">Staff</option>
+                                <option value="tenant">Tenant</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editStatus" required>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Update Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Property Modal -->
+    <div class="modal fade" id="createPropertyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus-circle me-2"></i>Add New Property
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createPropertyForm" onsubmit="createProperty(event)">
+                        <div class="mb-3">
+                            <label for="propertyName" class="form-label">Property Name</label>
+                            <input type="text" class="form-control" id="propertyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyType" class="form-label">Type</label>
+                            <select class="form-select" id="propertyType" required>
+                                <option value="apartment">Apartment</option>
+                                <option value="house">House</option>
+                                <option value="condo">Condominium</option>
+                                <option value="office">Office Space</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Add Property
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-key me-2"></i>Reset Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="resetPasswordForm" onsubmit="resetPassword(event)">
+                        <input type="hidden" id="resetPasswordAccountId">
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Reset Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add toast container -->
+    <div class="toast-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db-manager.js"></script>
+    <script src="js/payment-history-db.js"></script>
+    <script>
+        // Initialize database and load data
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await dbManager.initialize();
+                await paymentHistoryDB.initialize(); // Add this line to initialize payment history DB
+                console.log('Database initialized successfully');
+                
+                // Check if user is logged in and is an admin
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser || currentUser.role !== 'admin') {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Display user info
+                document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
+                
+                // Load initial data
+                await loadDashboardData();
+                await loadAccounts();
+                
+                // Show dashboard section by default
+                showSection('dashboard');
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                showToast('Failed to initialize the application', 'error');
+            }
+        });
+
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial check for viewport size
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (window.innerWidth >= 768) {
+                sidebar.style.transform = 'none';
+                mainContent.style.marginLeft = 'var(--sidebar-width)';
+            } else {
+                sidebar.style.transform = 'translateX(-100%)';
+                mainContent.style.marginLeft = '0';
+            }
+        });
+
+        // Toggle sidebar function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            
+            if (window.innerWidth < 768) {
+                if (sidebar.classList.contains('show')) {
+                    // Close sidebar
+                    sidebar.classList.remove('show');
+                    sidebar.style.transform = 'translateX(-100%)';
+                    document.body.style.overflow = '';
+                } else {
+                    // Open sidebar
+                    sidebar.classList.add('show');
+                    sidebar.style.transform = 'translateX(0)';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.querySelector('.main-content');
+                
+                if (window.innerWidth >= 768) {
+                    // Desktop view
+                    sidebar.classList.remove('show');
+                    sidebar.style.transform = 'none';
+                    mainContent.style.marginLeft = 'var(--sidebar-width)';
+                    document.body.style.overflow = '';
+                } else {
+                    // Mobile view
+                    mainContent.style.marginLeft = '0';
+                    if (!sidebar.classList.contains('show')) {
+                        sidebar.style.transform = 'translateX(-100%)';
+                    }
+                }
+            }, 100);
+        });
+
+        // Update showSection function
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section, .section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionName + 'Section') || document.getElementById(sectionName + '-section');
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+                
+                // Load section-specific data
+                if (sectionName === 'accountManagement') {
+                    loadAccounts();
+                } else if (sectionName === 'paymentHistory') {
+                    loadPaymentHistory();
+                }
+            }
+            
+            // Update active nav link
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Close sidebar on mobile after selection
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        }
+
+        // Add loading state management
+        function showLoading() {
+            document.getElementById('loadingSpinner').classList.remove('d-none');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').classList.add('d-none');
+        }
+
+        // Add toast notification function
+        function showToast(message, type = 'success') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast show`;
+            toast.innerHTML = `
+                <div class="toast-header">
+                    <i class="fas fa-${type === 'success' ? 'check-circle text-success' : 'exclamation-circle text-danger'} me-2"></i>
+                    <strong class="me-auto">${type === 'success' ? 'Success' : 'Error'}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        async function loadAccounts() {
+            showLoading();
+            try {
+                const accounts = await dbManager.getAllAccounts();
+                const accountsList = document.getElementById('accountsList');
+                
+                // Update statistics
+                document.getElementById('totalAccounts').textContent = accounts.length;
+                document.getElementById('activeAccounts').textContent = accounts.filter(a => a.status === 'active').length;
+                document.getElementById('pendingAccounts').textContent = accounts.filter(a => a.status === 'pending').length;
+                document.getElementById('suspendedAccounts').textContent = accounts.filter(a => a.status === 'suspended').length;
+                
+                // Render accounts table with enhanced mobile view
+                accountsList.innerHTML = accounts.map(account => `
+                    <tr class="account-card" data-role="${account.role}" data-status="${account.status}">
+                        <td data-label="Username">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-circle me-2 text-${getRoleColor(account.role)}"></i>
+                                ${account.username}
+                            </div>
+                        </td>
+                        <td data-label="Email">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-envelope me-2 text-muted"></i>
+                                ${account.email}
+                            </div>
+                        </td>
+                        <td data-label="Role">
+                            <div class="role-indicator ${account.role}">
+                                <i class="fas ${getRoleIcon(account.role)}"></i>
+                                ${account.role}
+                            </div>
+                        </td>
+                        <td data-label="Status">
+                            <div class="status-indicator ${account.status}">
+                                <i class="fas ${getStatusIcon(account.status)}"></i>
+                                ${account.status}
+                            </div>
+                        </td>
+                        <td data-label="Last Login">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-clock me-2 text-muted"></i>
+                                ${account.lastLogin ? new Date(account.lastLogin).toLocaleString() : 'Never'}
+                            </div>
+                        </td>
+                        <td data-label="Created At">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar me-2 text-muted"></i>
+                                ${new Date(account.createdAt).toLocaleDateString()}
+                            </div>
+                        </td>
+                        <td data-label="Actions">
+                            <div class="action-buttons">
+                                <button onclick="editAccount('${account.id}')" class="btn btn-sm btn-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                            </button>
+                                <button onclick="resetPasswordModal('${account.id}')" class="btn btn-sm btn-warning" title="Reset Password">
+                                    <i class="fas fa-key"></i>
+                            </button>
+                                <button onclick="toggleAccountStatus('${account.id}')" class="btn btn-sm ${account.status === 'active' ? 'btn-danger' : 'btn-success'}" title="${account.status === 'active' ? 'Suspend' : 'Activate'}">
+                                    <i class="fas fa-${account.status === 'active' ? 'ban' : 'check'}"></i>
+                                </button>
+                                <button onclick="deleteAccount('${account.id}')" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                showToast('Accounts loaded successfully');
+            } catch (error) {
+                console.error('Failed to load accounts:', error);
+                showToast('Failed to load accounts', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Helper functions for icons and colors
+        function getRoleIcon(role) {
+            switch (role) {
+                case 'admin': return 'fa-user-shield';
+                case 'staff': return 'fa-user-tie';
+                case 'tenant': return 'fa-user';
+                default: return 'fa-user';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'active': return 'fa-check-circle';
+                case 'pending': return 'fa-clock';
+                case 'suspended': return 'fa-ban';
+                default: return 'fa-question-circle';
+            }
+        }
+
+        function getRoleColor(role) {
+            switch (role) {
+                case 'admin': return 'primary';
+                case 'staff': return 'info';
+                case 'tenant': return 'success';
+                default: return 'secondary';
+            }
+        }
+
+        async function createAccount(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('newUsername').value;
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const role = document.getElementById('newRole').value;
+            const status = document.getElementById('newStatus').value;
+            
+            try {
+                await dbManager.createAccount({
+                    username,
+                    email,
+                    password,
+                    role,
+                    status,
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Close modal and reset form
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createAccountModal'));
+                modal.hide();
+                document.getElementById('createAccountForm').reset();
+                
+                // Reload accounts
+                loadAccounts();
+                
+                showToast('Account created successfully');
+            } catch (error) {
+                console.error('Failed to create account:', error);
+                showToast(error.message || 'Failed to create account', 'error');
+            }
+        }
+
+        async function editAccount(accountId) {
+            try {
+                const account = await dbManager.getAccount(accountId);
+                if (!account) {
+                    showToast('Account not found', 'error');
+                    return;
+                }
+                
+                // Populate edit form
+                document.getElementById('editAccountId').value = account.id;
+                document.getElementById('editUsername').value = account.username;
+                document.getElementById('editEmail').value = account.email;
+                document.getElementById('editRole').value = account.role;
+                document.getElementById('editStatus').value = account.status;
+                
+                // Show edit modal
+                const editModal = new bootstrap.Modal(document.getElementById('editAccountModal'));
+                editModal.show();
+            } catch (error) {
+                console.error('Failed to load account details:', error);
+                showToast('Failed to load account details', 'error');
+            }
+        }
+
+        async function updateAccount(event) {
+            event.preventDefault();
+            
+            const accountId = document.getElementById('editAccountId').value;
+            const email = document.getElementById('editEmail').value;
+            const role = document.getElementById('editRole').value;
+            const status = document.getElementById('editStatus').value;
+            
+            try {
+                await dbManager.updateAccount(accountId, {
+                    email,
+                    role,
+                    status
+                });
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editAccountModal'));
+                modal.hide();
+                
+                // Reload accounts
+                loadAccounts();
+                
+                showToast('Account updated successfully');
+            } catch (error) {
+                console.error('Failed to update account:', error);
+                showToast('Failed to update account', 'error');
+            }
+        }
+
+        async function resetPasswordModal(accountId) {
+            document.getElementById('resetPasswordAccountId').value = accountId;
+            const modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+            modal.show();
+        }
+
+        async function resetPassword(event) {
+            event.preventDefault();
+            
+            const accountId = document.getElementById('resetPasswordAccountId').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            try {
+                await dbManager.resetPassword(accountId, newPassword);
+                
+                // Close modal and reset form
+                const modal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                modal.hide();
+                document.getElementById('resetPasswordForm').reset();
+                
+                showToast('Password reset successfully');
+            } catch (error) {
+                console.error('Failed to reset password:', error);
+                showToast('Failed to reset password', 'error');
+            }
+        }
+
+        async function toggleAccountStatus(accountId) {
+            try {
+                const account = await dbManager.getAccount(accountId);
+                const newStatus = account.status === 'active' ? 'suspended' : 'active';
+                
+                await dbManager.updateAccount(accountId, { status: newStatus });
+                loadAccounts();
+                
+                showToast(`Account ${newStatus === 'active' ? 'activated' : 'suspended'} successfully`);
+            } catch (error) {
+                console.error('Failed to toggle account status:', error);
+                showToast('Failed to update account status', 'error');
+            }
+        }
+
+        async function deleteAccount(accountId) {
+            if (!confirm('Are you sure you want to delete this account? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                await dbManager.deleteAccount(accountId);
+                loadAccounts();
+                showToast('Account deleted successfully');
+            } catch (error) {
+                console.error('Failed to delete account:', error);
+                showToast('Failed to delete account', 'error');
+            }
+        }
+
+        function filterAccounts() {
+            const roleFilter = document.getElementById('roleFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchTerm = document.getElementById('searchAccount').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#accountsList tr');
+            
+            rows.forEach(row => {
+                const role = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const status = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                const username = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+                const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                
+                const roleMatch = !roleFilter || role.includes(roleFilter);
+                const statusMatch = !statusFilter || status.includes(statusFilter);
+                const searchMatch = !searchTerm || username.includes(searchTerm) || email.includes(searchTerm);
+                
+                row.style.display = roleMatch && statusMatch && searchMatch ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('roleFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('searchAccount').value = '';
+            filterAccounts();
+        }
+
+        async function loadProperties() {
+            try {
+                const properties = await dbManager.getProperties();
+                const propertiesList = document.getElementById('propertiesList');
+                
+                // Update stats
+                document.getElementById('totalProperties').textContent = properties.length;
+                document.getElementById('availableProperties').textContent = properties.filter(p => p.status === 'available').length;
+                document.getElementById('occupiedProperties').textContent = properties.filter(p => p.status === 'occupied').length;
+                
+                propertiesList.innerHTML = properties.map(property => `
+                    <tr>
+                        <td>${property.name}</td>
+                        <td><span class="badge bg-info">${property.type}</span></td>
+                        <td><span class="badge ${property.status === 'available' ? 'bg-success' : 'bg-warning'}">${property.status}</span></td>
+                        <td>${property.tenantId || 'None'}</td>
+                        <td class="action-buttons">
+                            <button onclick="editProperty('${property.id}')" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button onclick="deleteProperty('${property.id}')" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load properties:', error);
+                alert('Failed to load properties. Please refresh the page.');
+            }
+        }
+
+        async function loadMaintenanceRequests() {
+            try {
+                const requests = await dbManager.getComplaints();
+                const maintenanceList = document.getElementById('maintenanceList');
+                
+                // Update stats
+                document.getElementById('totalRequests').textContent = requests.length;
+                document.getElementById('pendingRequests').textContent = requests.filter(r => r.status === 'pending').length;
+                document.getElementById('completedRequests').textContent = requests.filter(r => r.status === 'completed').length;
+                
+                maintenanceList.innerHTML = requests.map(request => `
+                    <tr>
+                        <td>${new Date(request.createdAt).toLocaleDateString()}</td>
+                        <td>${request.tenantId}</td>
+                        <td>${request.description}</td>
+                        <td><span class="badge ${getStatusBadgeClass(request.status)}">${request.status}</span></td>
+                        <td class="action-buttons">
+                            <button onclick="viewMaintenanceRequest('${request.id}')" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button onclick="updateMaintenanceStatus('${request.id}')" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i> Update
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load maintenance requests:', error);
+                alert('Failed to load maintenance requests. Please refresh the page.');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+            
+        // Add hover effects for cards
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        async function loadDashboardData() {
+            showLoading();
+            try {
+                // Load available apartments from listing page
+                const apartments = await dbManager.getAvailableApartments();
+                const availableApartmentsCount = apartments.length;
+                document.getElementById('availableApartments').textContent = availableApartmentsCount;
+                
+                // Calculate trend (comparing with last month's data)
+                const lastMonthApartments = await dbManager.getLastMonthAvailableApartments();
+                const trend = calculateTrend(availableApartmentsCount, lastMonthApartments.length);
+                document.getElementById('apartmentTrend').textContent = `${trend}% from last month`;
+
+                // Load latest payments
+                const payments = await dbManager.getPayments();
+                const latestPaymentsList = document.getElementById('latestPaymentsList');
+                latestPaymentsList.innerHTML = payments.slice(0, 5).map(payment => `
+                    <tr>
+                        <td>${payment.tenantName}</td>
+                        <td>$${payment.amount}</td>
+                        <td>${new Date(payment.date).toLocaleDateString()}</td>
+                        <td><span class="badge ${payment.status === 'completed' ? 'bg-success' : 'bg-warning'}">${payment.status}</span></td>
+                    </tr>
+                `).join('');
+
+                // Load upcoming events
+                const events = await dbManager.getEvents();
+                const upcomingEventsList = document.getElementById('upcomingEventsList');
+                upcomingEventsList.innerHTML = events.slice(0, 5).map(event => `
+                    <tr>
+                        <td>${event.name}</td>
+                        <td>${new Date(event.date).toLocaleDateString()}</td>
+                        <td>${event.location}</td>
+                        <td><span class="badge ${event.status === 'confirmed' ? 'bg-success' : 'bg-warning'}">${event.status}</span></td>
+                    </tr>
+                `).join('');
+
+                // Update statistics
+                document.getElementById('totalBookings').textContent = events.length;
+                
+                // Update notifications
+                const pendingMaintenance = await dbManager.getComplaints();
+                const pendingPayments = payments.filter(p => p.status === 'pending');
+                const pendingEvents = events.filter(e => e.status === 'pending');
+                
+                const notificationList = document.querySelector('.alert-info ul');
+                notificationList.innerHTML = `
+                    <li>${pendingMaintenance.length} new maintenance requests pending</li>
+                    <li>${pendingPayments.length} upcoming rent payments due tomorrow</li>
+                    <li>${pendingEvents.length} new event booking requests</li>
+                `;
+
+                // Initialize charts
+                initializeCharts(payments, events);
+                
+                showToast('Dashboard data loaded successfully');
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                showToast('Failed to load dashboard data', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function initializeCharts(payments, events) {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Monthly Revenue',
+                        data: [12000, 19000, 15000, 25000, 22000, 30000],
+                        borderColor: '#6366f1',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Property Status Chart
+            const propertyCtx = document.getElementById('propertyStatusChart').getContext('2d');
+            new Chart(propertyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Occupied', 'Available', 'Maintenance'],
+                    datasets: [{
+                        data: [65, 25, 10],
+                        backgroundColor: [
+                            '#10b981',
+                            '#6366f1',
+                            '#f59e0b'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helper function to calculate trend percentage
+        function calculateTrend(current, previous) {
+            if (previous === 0) return 100;
+            const difference = current - previous;
+            const percentage = (difference / previous) * 100;
+            return Math.round(percentage);
+        }
+
+        // Payment History Functions
+        async function loadPaymentHistory() {
+            showLoading();
+            try {
+                console.log('Loading payment history...');
+                const payments = await paymentHistoryDB.getAllPayments();
+                console.log('Payments loaded:', payments);
+                
+                // Calculate statistics and trends
+                const stats = calculatePaymentStats(payments);
+                
+                // Update statistics display
+                updatePaymentStats(stats);
+                
+                // Render payments table
+                renderPaymentsTable(payments);
+                
+                showToast('Payment history loaded successfully');
+            } catch (error) {
+                console.error('Failed to load payment history:', error);
+                showToast('Failed to load payment history: ' + (error.message || 'Unknown error'), 'error');
+                showErrorState();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function calculatePaymentStats(payments) {
+            const now = new Date();
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            
+            const currentMonthPayments = payments.filter(p => new Date(p.date) >= lastMonth);
+            const previousMonthPayments = payments.filter(p => {
+                const date = new Date(p.date);
+                return date >= new Date(lastMonth.getFullYear(), lastMonth.getMonth() - 1, 1) && date < lastMonth;
+            });
+            
+            return {
+                total: {
+                    count: payments.length,
+                    trend: calculateTrend(
+                        currentMonthPayments.length,
+                        previousMonthPayments.length
+                    )
+                },
+                completed: {
+                    count: payments.filter(p => p.status === 'completed').length,
+                    trend: calculateTrend(
+                        currentMonthPayments.filter(p => p.status === 'completed').length,
+                        previousMonthPayments.filter(p => p.status === 'completed').length
+                    )
+                },
+                pending: {
+                    count: payments.filter(p => p.status === 'pending').length,
+                    trend: calculateTrend(
+                        currentMonthPayments.filter(p => p.status === 'pending').length,
+                        previousMonthPayments.filter(p => p.status === 'pending').length
+                    )
+                },
+                failed: {
+                    count: payments.filter(p => p.status === 'failed').length,
+                    trend: calculateTrend(
+                        currentMonthPayments.filter(p => p.status === 'failed').length,
+                        previousMonthPayments.filter(p => p.status === 'failed').length
+                    )
+                }
+            };
+        }
+
+        function updatePaymentStats(stats) {
+            document.getElementById('total-payments').textContent = stats.total.count;
+            document.getElementById('completed-payments').textContent = stats.completed.count;
+            document.getElementById('pending-payments').textContent = stats.pending.count;
+            document.getElementById('failed-payments').textContent = stats.failed.count;
+            
+            document.getElementById('total-trend').textContent = `${stats.total.trend}% from last month`;
+            document.getElementById('completed-trend').textContent = `${stats.completed.trend}% from last month`;
+            document.getElementById('pending-trend').textContent = `${stats.pending.trend}% from last month`;
+            document.getElementById('failed-trend').textContent = `${stats.failed.trend}% from last month`;
+        }
+
+        function renderPaymentsTable(payments) {
+            const paymentsTableBody = document.getElementById('payments-table-body');
+            
+            if (!payments || payments.length === 0) {
+                paymentsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            No payment records found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            paymentsTableBody.innerHTML = payments.map(payment => `
+                <tr class="payment-card" data-status="${payment.status}">
+                    <td data-label="Date">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-calendar me-2 text-muted"></i>
+                            ${new Date(payment.date).toLocaleDateString()}
+                        </div>
+                    </td>
+                    <td data-label="Tenant">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-user me-2 text-muted"></i>
+                            ${payment.tenantId}
+                        </div>
+                    </td>
+                    <td data-label="Amount">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-dollar-sign me-2 text-muted"></i>
+                            ₱${payment.amount.toLocaleString()}
+                        </div>
+                    </td>
+                    <td data-label="Payment Method">
+                        <div class="payment-method-indicator ${payment.paymentMethod}">
+                            <i class="fas ${getPaymentMethodIcon(payment.paymentMethod)}"></i>
+                            ${formatPaymentMethod(payment.paymentMethod)}
+                        </div>
+                    </td>
+                    <td data-label="Status">
+                        <div class="status-indicator ${payment.status}">
+                            <i class="fas ${getPaymentStatusIcon(payment.status)}"></i>
+                            ${payment.status}
+                        </div>
+                    </td>
+                    <td data-label="Actions">
+                        <div class="action-buttons">
+                            <button onclick="viewPaymentDetails('${payment.id}')" class="btn btn-sm btn-info" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="updatePaymentStatus('${payment.id}')" class="btn btn-sm btn-warning" title="Update Status">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deletePayment('${payment.id}')" class="btn btn-sm btn-danger" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showErrorState() {
+            const paymentsTableBody = document.getElementById('payments-table-body');
+            paymentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Failed to load payment history. Please try again.
+                    </td>
+                </tr>
+            `;
+        }
+
+        function getPaymentMethodIcon(method) {
+            switch (method) {
+                case 'credit_card': return 'fa-credit-card';
+                case 'bank_transfer': return 'fa-university';
+                case 'cash': return 'fa-money-bill';
+                default: return 'fa-money-bill';
+            }
+        }
+
+        function formatPaymentMethod(method) {
+            return method.split('_').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        function getPaymentStatusIcon(status) {
+            switch (status) {
+                case 'completed': return 'fa-check-circle';
+                case 'pending': return 'fa-clock';
+                case 'failed': return 'fa-times-circle';
+                default: return 'fa-question-circle';
+            }
+        }
+
+        async function filterPayments() {
+            const status = document.getElementById('paymentStatusFilter').value;
+            const method = document.getElementById('paymentMethodFilter').value;
+            const startDate = document.getElementById('paymentDateStart').value;
+            const endDate = document.getElementById('paymentDateEnd').value;
+            
+            showLoading();
+            try {
+                let payments;
+                
+                if (startDate && endDate) {
+                    payments = await paymentHistoryDB.getPaymentsByDateRange(startDate, endDate);
+                } else {
+                    payments = await paymentHistoryDB.getAllPayments();
+                }
+                
+                // Apply filters
+                payments = payments.filter(payment => {
+                    const statusMatch = !status || payment.status === status;
+                    const methodMatch = !method || payment.paymentMethod === method;
+                    return statusMatch && methodMatch;
+                });
+                
+                // Update table
+                const paymentHistoryList = document.getElementById('paymentHistoryList');
+                paymentHistoryList.innerHTML = payments.map(payment => `
+                    <tr class="payment-card" data-status="${payment.status}">
+                        <td data-label="Date">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calendar me-2 text-muted"></i>
+                                ${new Date(payment.date).toLocaleDateString()}
+                            </div>
+                        </td>
+                        <td data-label="Tenant">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user me-2 text-muted"></i>
+                                ${payment.tenantId}
+                            </div>
+                        </td>
+                        <td data-label="Amount">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-dollar-sign me-2 text-muted"></i>
+                                $${payment.amount.toLocaleString()}
+                            </div>
+                        </td>
+                        <td data-label="Payment Method">
+                            <div class="payment-method-indicator ${payment.paymentMethod}">
+                                <i class="fas ${getPaymentMethodIcon(payment.paymentMethod)}"></i>
+                                ${formatPaymentMethod(payment.paymentMethod)}
+                            </div>
+                        </td>
+                        <td data-label="Status">
+                            <div class="status-indicator ${payment.status}">
+                                <i class="fas ${getPaymentStatusIcon(payment.status)}"></i>
+                                ${payment.status}
+                            </div>
+                        </td>
+                        <td data-label="Actions">
+                            <div class="action-buttons">
+                                <button onclick="viewPaymentDetails('${payment.id}')" class="btn btn-sm btn-info" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="updatePaymentStatus('${payment.id}')" class="btn btn-sm btn-primary" title="Update Status">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deletePayment('${payment.id}')" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                showToast('Payments filtered successfully');
+            } catch (error) {
+                console.error('Failed to filter payments:', error);
+                showToast('Failed to filter payments', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function viewPaymentDetails(paymentId) {
+            try {
+                const payment = await paymentHistoryDB.getPayment(paymentId);
+                if (!payment) {
+                    showToast('Payment not found', 'error');
+                    return;
+                }
+                
+                // Show payment details in a modal
+                const modal = new bootstrap.Modal(document.getElementById('paymentDetailsModal'));
+                document.getElementById('paymentDetailsContent').innerHTML = `
+                    <div class="payment-details">
+                        <div class="detail-item">
+                            <label>Payment ID:</label>
+                            <span>${payment.id}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Tenant ID:</label>
+                            <span>${payment.tenantId}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Amount:</label>
+                            <span>$${payment.amount.toLocaleString()}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Payment Method:</label>
+                            <span>${formatPaymentMethod(payment.paymentMethod)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Status:</label>
+                            <span class="status-indicator ${payment.status}">${payment.status}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Date:</label>
+                            <span>${new Date(payment.date).toLocaleString()}</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Description:</label>
+                            <span>${payment.description || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                modal.show();
+            } catch (error) {
+                console.error('Failed to load payment details:', error);
+                showToast('Failed to load payment details', 'error');
+            }
+        }
+
+        async function updatePaymentStatus(paymentId) {
+            try {
+                const payment = await paymentHistoryDB.getPayment(paymentId);
+                if (!payment) {
+                    showToast('Payment not found', 'error');
+                    return;
+                }
+                
+                // Show status update modal
+                const modal = new bootstrap.Modal(document.getElementById('updatePaymentStatusModal'));
+                document.getElementById('updatePaymentId').value = paymentId;
+                document.getElementById('currentPaymentStatus').textContent = payment.status;
+                modal.show();
+            } catch (error) {
+                console.error('Failed to load payment for update:', error);
+                showToast('Failed to load payment details', 'error');
+            }
+        }
+
+        async function submitPaymentStatusUpdate(event) {
+            event.preventDefault();
+            
+            const paymentId = document.getElementById('updatePaymentId').value;
+            const newStatus = document.getElementById('newPaymentStatus').value;
+            
+            try {
+                await paymentHistoryDB.updatePayment(paymentId, { status: newStatus });
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('updatePaymentStatusModal'));
+                modal.hide();
+                
+                // Reload payment history
+                loadPaymentHistory();
+                
+                showToast('Payment status updated successfully');
+            } catch (error) {
+                console.error('Failed to update payment status:', error);
+                showToast('Failed to update payment status', 'error');
+            }
+        }
+
+        async function deletePayment(paymentId) {
+            if (!confirm('Are you sure you want to delete this payment record? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                await paymentHistoryDB.deletePayment(paymentId);
+                loadPaymentHistory();
+                showToast('Payment deleted successfully');
+            } catch (error) {
+                console.error('Failed to delete payment:', error);
+                showToast('Failed to delete payment', 'error');
+            }
+        }
+
+        async function exportPaymentHistory() {
+            // Function removed
+        }
+
+        // Load tenant accounts for payment recording
+        async function loadTenantAccounts() {
+            try {
+                const accounts = await dbManager.getAllAccounts();
+                const tenants = accounts.filter(account => account.role === 'tenant');
+                const select = document.getElementById('payment-tenant');
+                select.innerHTML = '<option value="">Select Tenant</option>';
+                
+                tenants.forEach(tenant => {
+                    const option = document.createElement('option');
+                    option.value = tenant.id;
+                    option.textContent = `${tenant.username} (${tenant.email})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading tenant accounts:', error);
+                showToast('Error loading tenant accounts', 'error');
+            }
+        }
+
+        // Show record payment modal
+        function showRecordPaymentModal() {
+            loadTenantAccounts();
+            const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
+            modal.show();
+        }
+
+        // Submit new payment
+        async function submitPayment(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('record-payment-form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const month = document.getElementById('payment-month').value;
+            const [year, monthNum] = month.split('-');
+            const paymentDate = new Date(year, monthNum - 1, 1); // Set to first day of the month
+
+            const paymentData = {
+                id: Date.now().toString(),
+                tenantId: document.getElementById('payment-tenant').value,
+                amount: parseFloat(document.getElementById('payment-amount').value),
+                paymentMethod: document.getElementById('payment-method').value,
+                description: document.getElementById('payment-description').value,
+                date: paymentDate.toISOString(),
+                status: 'completed',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                await paymentHistoryDB.addPayment(paymentData);
+                
+                // Reset form
+                form.reset();
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('recordPaymentModal'));
+                modal.hide();
+                
+                // Reload payment history
+                await loadPaymentHistory();
+                
+                showToast('Payment recorded successfully', 'success');
+            } catch (error) {
+                console.error('Error recording payment:', error);
+                showToast('Error recording payment: ' + error.message, 'error');
+            }
+        }
+
+        function resetPaymentFilters() {
+            document.getElementById('payment-status-filter').value = '';
+            document.getElementById('payment-method-filter').value = '';
+            document.getElementById('payment-date-from').value = '';
+            document.getElementById('payment-date-to').value = '';
+            filterPayments();
+        }
+
+        async function checkExistingPayments() {
+            const tenantId = document.getElementById('payment-tenant').value;
+            const month = document.getElementById('payment-month').value;
+            const warning = document.getElementById('existing-payment-warning');
+            const submitBtn = document.getElementById('submit-payment-btn');
+            
+            if (!tenantId || !month) {
+                warning.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            try {
+                const existingPayments = await paymentHistoryDB.getPaymentsByTenantAndMonth(tenantId, month);
+                if (existingPayments.length > 0) {
+                    warning.style.display = 'block';
+                    submitBtn.disabled = true;
+                } else {
+                    warning.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error checking existing payments:', error);
+                showToast('Error checking existing payments', 'error');
+            }
+        }
+    </script>
+
+    <!-- Payment Details Modal -->
+    <div class="modal fade" id="paymentDetailsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-info-circle me-2"></i>Payment Details
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="paymentDetailsContent">
+                    <!-- Payment details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Payment Status Modal -->
+    <div class="modal fade" id="updatePaymentStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Update Payment Status
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updatePaymentStatusForm" onsubmit="submitPaymentStatusUpdate(event)">
+                        <input type="hidden" id="updatePaymentId">
+                        <div class="mb-3">
+                            <label class="form-label">Current Status</label>
+                            <div id="currentPaymentStatus" class="form-control-plaintext"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPaymentStatus" class="form-label">New Status</label>
+                            <select class="form-select" id="newPaymentStatus" required>
+                                <option value="completed">Completed</option>
+                                <option value="pending">Pending</option>
+                                <option value="failed">Failed</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="statusUpdateReason" class="form-label">Reason for Update</label>
+                            <textarea class="form-control" id="statusUpdateReason" rows="2" 
+                                    placeholder="Enter reason for status update"></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-2"></i>Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Payment Modal -->
+    <div class="modal fade" id="recordPaymentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Record New Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="record-payment-form" onsubmit="submitPayment(event)">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="payment-tenant" class="form-label">Tenant</label>
+                                <select class="form-select" id="payment-tenant" required onchange="checkExistingPayments()">
+                                    <option value="">Select Tenant</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="payment-month" class="form-label">Payment Month</label>
+                                <input type="month" class="form-control" id="payment-month" required onchange="checkExistingPayments()">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="payment-amount" class="form-label">Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="payment-amount" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="payment-method" class="form-label">Payment Method</label>
+                                <select class="form-select" id="payment-method" required>
+                                    <option value="">Select Method</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="check">Check</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="payment-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="payment-description" rows="3"></textarea>
+                        </div>
+                        <div class="alert alert-warning" id="existing-payment-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            A payment for this month already exists for the selected tenant.
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="submit-payment-btn">Record Payment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
+</html> 

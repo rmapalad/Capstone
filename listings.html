@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Units - Property Name</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Property Name</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#gallery">Gallery</a></li>
+            <li><a href="index.html#offerings">Offerings</a></li>
+            <li><a href="listings.html" class="active">Listings</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Listings Header -->
+    <section class="listings-header">
+        <div class="container">
+            <h1>Available Units</h1>
+            <p>Find your perfect space in our property</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search by location, type, or features...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Listings Section -->
+    <section class="listings">
+        <div class="container">
+            <!-- Filters -->
+            <div class="listings-filters">
+                <div class="filter-group">
+                    <label for="property-type">Property Type</label>
+                    <select id="property-type">
+                        <option value="all">All Types</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="event">Event Space</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="price-range">Price Range</label>
+                    <select id="price-range">
+                        <option value="all">All Prices</option>
+                        <option value="0-1000">₱0 - ₱1,000</option>
+                        <option value="1000-2000">₱1,000 - ₱2,000</option>
+                        <option value="2000-3000">₱2,000 - ₱3,000</option>
+                        <option value="3000+">₱3,000+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="bedrooms">Bedrooms</label>
+                    <select id="bedrooms">
+                        <option value="all">All</option>
+                        <option value="studio">Studio</option>
+                        <option value="1">1 Bedroom</option>
+                        <option value="2">2 Bedrooms</option>
+                        <option value="3+">3+ Bedrooms</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="amenities">Amenities</label>
+                    <select id="amenities">
+                        <option value="all">All Amenities</option>
+                        <option value="parking">Parking</option>
+                        <option value="pool">Swimming Pool</option>
+                        <option value="gym">Fitness Center</option>
+                        <option value="security">24/7 Security</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="availability">Availability</label>
+                    <select id="availability">
+                        <option value="all">All</option>
+                        <option value="immediate">Immediate</option>
+                        <option value="next-month">Next Month</option>
+                        <option value="custom">Custom Date</option>
+                    </select>
+                </div>
+                <button class="filter-btn">Apply Filters</button>
+                <button class="reset-btn">Reset Filters</button>
+            </div>
+
+            <!-- Listings Grid -->
+            <div class="listings-grid">
+                <!-- Listing Item 1 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Luxury Apartment">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-swimming-pool"></i></span>
+                            <span><i class="fas fa-dumbbell"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Luxury Studio Apartment</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-bed"></i> Studio</span>
+                            <span><i class="fas fa-bath"></i> 1 Bath</span>
+                            <span><i class="fas fa-ruler-combined"></i> 45 sqm</span>
+                            <span><i class="fas fa-building"></i> 3rd Floor</span>
+                        </div>
+                        <p class="listing-description">Modern studio apartment with premium finishes, high ceilings, and city views. Features include built-in storage, modern appliances, and a private balcony.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Pool</span>
+                            <span>Gym</span>
+                            <span>Security</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱15,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱30,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 2 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Commercial Space">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-shield-alt"></i></span>
+                            <span><i class="fas fa-truck"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Prime Retail Space</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-store"></i> Retail</span>
+                            <span><i class="fas fa-door-open"></i> 2 Entrances</span>
+                            <span><i class="fas fa-ruler-combined"></i> 80 sqm</span>
+                            <span><i class="fas fa-building"></i> Ground Floor</span>
+                        </div>
+                        <p class="listing-description">High-traffic retail space with excellent visibility and modern amenities. Perfect for retail stores, restaurants, or service businesses. Includes storage room and staff facilities.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Security</span>
+                            <span>Loading Area</span>
+                            <span>Storage</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱25,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱50,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 3 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Event Space">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                            <span><i class="fas fa-wifi"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Elegant Event Venue</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-users"></i> 200 Capacity</span>
+                            <span><i class="fas fa-parking"></i> 50 Cars</span>
+                            <span><i class="fas fa-ruler-combined"></i> 150 sqm</span>
+                            <span><i class="fas fa-building"></i> 2nd Floor</span>
+                        </div>
+                        <p class="listing-description">Versatile event space perfect for corporate events, weddings, and social gatherings. Features include a stage, professional lighting, sound system, and catering kitchen.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Catering</span>
+                            <span>WiFi</span>
+                            <span>AV Equipment</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱35,000</span>
+                            <span class="period">/day</span>
+                            <span class="deposit">+ ₱20,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 4 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="1 Bedroom Apartment">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-umbrella-beach"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Cozy 1-Bedroom Apartment</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-bed"></i> 1 Bedroom</span>
+                            <span><i class="fas fa-bath"></i> 1 Bath</span>
+                            <span><i class="fas fa-ruler-combined"></i> 55 sqm</span>
+                            <span><i class="fas fa-building"></i> 5th Floor</span>
+                        </div>
+                        <p class="listing-description">Bright and airy one-bedroom apartment with modern finishes. Features include a fully equipped kitchen, built-in wardrobes, and a private balcony with city views.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>WiFi</span>
+                            <span>Pool</span>
+                            <span>Gym</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱18,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱36,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 5 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="2 Bedroom Apartment">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-dumbbell"></i></span>
+                            <span><i class="fas fa-swimming-pool"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Spacious 2-Bedroom Apartment</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-bed"></i> 2 Bedrooms</span>
+                            <span><i class="fas fa-bath"></i> 2 Baths</span>
+                            <span><i class="fas fa-ruler-combined"></i> 85 sqm</span>
+                            <span><i class="fas fa-building"></i> 8th Floor</span>
+                        </div>
+                        <p class="listing-description">Luxurious two-bedroom apartment with premium finishes and panoramic city views. Features include a modern kitchen, spacious living area, and two private balconies.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Gym</span>
+                            <span>Pool</span>
+                            <span>Security</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱25,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱50,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 6 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Office Space">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-shield-alt"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Modern Office Space</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-building"></i> Office</span>
+                            <span><i class="fas fa-users"></i> 10-15 People</span>
+                            <span><i class="fas fa-ruler-combined"></i> 100 sqm</span>
+                            <span><i class="fas fa-building"></i> 4th Floor</span>
+                        </div>
+                        <p class="listing-description">Contemporary office space with modern amenities and natural light. Perfect for startups and small businesses. Includes meeting rooms, reception area, and high-speed internet.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>WiFi</span>
+                            <span>Security</span>
+                            <span>Meeting Rooms</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱30,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱60,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 7 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="3 Bedroom Apartment">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-swimming-pool"></i></span>
+                            <span><i class="fas fa-dumbbell"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Luxury 3-Bedroom Apartment</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-bed"></i> 3 Bedrooms</span>
+                            <span><i class="fas fa-bath"></i> 2.5 Baths</span>
+                            <span><i class="fas fa-ruler-combined"></i> 120 sqm</span>
+                            <span><i class="fas fa-building"></i> 12th Floor</span>
+                        </div>
+                        <p class="listing-description">Premium three-bedroom apartment with panoramic city views. Features include a gourmet kitchen, walk-in closets, and a spacious living area perfect for entertaining.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Pool</span>
+                            <span>Gym</span>
+                            <span>Security</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱35,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱70,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 8 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Restaurant Space">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-utensils"></i></span>
+                            <span><i class="fas fa-truck"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Restaurant Space</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-store"></i> Restaurant</span>
+                            <span><i class="fas fa-users"></i> 50 Seats</span>
+                            <span><i class="fas fa-ruler-combined"></i> 90 sqm</span>
+                            <span><i class="fas fa-building"></i> Ground Floor</span>
+                        </div>
+                        <p class="listing-description">Prime restaurant space with high foot traffic. Features include a fully equipped kitchen, storage area, and outdoor seating. Perfect for new restaurant concepts.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>Kitchen</span>
+                            <span>Storage</span>
+                            <span>Outdoor Seating</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱40,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱80,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listing Item 9 -->
+                <div class="listing-item">
+                    <div class="listing-image">
+                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Co-working Space">
+                        <div class="listing-status">Available</div>
+                        <div class="listing-features">
+                            <span><i class="fas fa-parking"></i></span>
+                            <span><i class="fas fa-wifi"></i></span>
+                            <span><i class="fas fa-coffee"></i></span>
+                        </div>
+                    </div>
+                    <div class="listing-content">
+                        <h3>Co-working Space</h3>
+                        <div class="listing-details">
+                            <span><i class="fas fa-building"></i> Co-working</span>
+                            <span><i class="fas fa-users"></i> 20 Desks</span>
+                            <span><i class="fas fa-ruler-combined"></i> 110 sqm</span>
+                            <span><i class="fas fa-building"></i> 6th Floor</span>
+                        </div>
+                        <p class="listing-description">Modern co-working space with flexible desk arrangements. Features include high-speed internet, meeting rooms, and a communal kitchen. Perfect for freelancers and small teams.</p>
+                        <div class="listing-amenities">
+                            <span>Parking</span>
+                            <span>WiFi</span>
+                            <span>Kitchen</span>
+                            <span>Meeting Rooms</span>
+                        </div>
+                        <div class="listing-price">
+                            <span class="price">₱28,000</span>
+                            <span class="period">/month</span>
+                            <span class="deposit">+ ₱56,000 deposit</span>
+                        </div>
+                        <div class="listing-actions">
+                            <a href="#" class="view-details">View Details</a>
+                            <a href="#" class="contact-agent">Contact Agent</a>
+                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#" class="next">Next <i class="fas fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Property Name</h3>
+                    <p>Your premier destination for living, shopping, and events.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#gallery">Gallery</a></li>
+                        <li><a href="index.html#offerings">Offerings</a></li>
+                        <li><a href="listings.html">Listings</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Property Name. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
