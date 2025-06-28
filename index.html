@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Use Property</title>
+    <title>PRF Winsum</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="logo">Property Name</div>
+        <div class="logo">PRF</div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#home" class="active">Home</a></li>
             <li><a href="#gallery">Gallery</a></li>
             <li><a href="#offerings">Offerings</a></li>
             <li><a href="listings.html">Listings</a></li>
@@ -29,8 +29,8 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>Welcome to Our Multi-Use Property</h1>
-            <p>Your premier destination for living, shopping, and events</p>
+            <h1>Welcome to PRF Winsum</h1>
+            <p>Experience the Heart of Cubao</p>
             <a href="#gallery" class="cta-button">View Gallery</a>
         </div>
     </section>
@@ -109,11 +109,11 @@
                         </div>
                         <div class="about-stats">
                             <div class="stat-item">
-                                <span class="stat-number">10+</span>
+                                <span class="stat-number">5+</span>
                                 <span class="stat-label">Years Experience</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-number">500+</span>
+                                <span class="stat-number">50+</span>
                                 <span class="stat-label">Happy Residents</span>
                             </div>
                             <div class="stat-item">
@@ -131,7 +131,7 @@
                         </div>
                         <div class="feature-content">
                             <i class="fas fa-home"></i>
-                            <h3>Luxury Apartments</h3>
+                            <h3>Apartments</h3>
                             <p>Modern living spaces with premium amenities, designed for comfort and style.</p>
                             <a href="#apartments" class="feature-link">Learn More <i class="fas fa-arrow-right"></i></a>
                         </div>
@@ -345,5 +345,21 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/init-sync.js"></script>
+
+    <h2>Upload a File</h2>
+  
+    <!-- File input for selecting a file -->
+    <input type="file" id="file-input" />
+    
+    <!-- Button to trigger file upload -->
+    <button id="upload-button">Upload</button>
+  
+    <!-- Link the JavaScript file -->
+    <script type="module" src="./upload.js"></script>
 </body>
 </html> 

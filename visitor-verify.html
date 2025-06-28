@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Verification - Property Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .verification-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+        .verification-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .verification-header i {
+            font-size: 3rem;
+            color: #0d6efd; /* Bootstrap primary */
+        }
+        .verification-header h2 {
+            margin-top: 1rem;
+            font-weight: 700;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #6c757d; /* Bootstrap secondary */
+        }
+        .detail-value {
+            text-align: right;
+        }
+        .status-badge {
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 0.5em 1em;
+            border-radius: 30px;
+        }
+        .status-approved {
+            background-color: #198754; /* Bootstrap success */
+            color: white;
+        }
+        .status-revoked {
+            background-color: #dc3545; /* Bootstrap danger */
+            color: white;
+        }
+        .status-pending, .status-default {
+            background-color: #ffc107; /* Bootstrap warning */
+            color: #000;
+        }
+        .error-message {
+            text-align: center;
+            color: #dc3545;
+        }
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        .photo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .visitor-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .photo-container:hover .visitor-photo {
+            transform: scale(1.05);
+        }
+
+        .photo-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .photo-timestamp {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .verification-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .verification-status i {
+            font-size: 1.2rem;
+        }
+
+        .verification-status.verified {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .verification-status.unverified {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Zoom overlay styles */
+        .photo-zoom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: zoom-out;
+            animation: fadeIn 0.2s;
+        }
+        .photo-zoom-overlay img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-card">
+        <div class="verification-header">
+            <i class="fas fa-user-check"></i>
+            <h2>Visitor Verification</h2>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div id="visitorDetailsContainer" style="display: none;">
+            <div class="text-center mb-4">
+                <div id="visitorPhotoContainer" class="photo-container mb-3" style="display: none;">
+                    <img id="visitorPhoto" class="visitor-photo" alt="Visitor Photo" />
+                    <div class="photo-badge">
+                        <i class="fas fa-camera"></i> Verified Photo
+                    </div>
+                    <div class="photo-timestamp" id="photoTimestamp"></div>
+                </div>
+                <div id="photoVerificationStatus"></div>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Visitor Name:</span>
+                <span class="detail-value" id="visitorName">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Visit Date:</span>
+                <span class="detail-value" id="visitDate">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Visit Time:</span>
+                <span class="detail-value" id="visitTime">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Purpose:</span>
+                <span class="detail-value" id="visitPurpose">-</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Registered By:</span>
+                <span class="detail-value" id="tenantId">-</span>
+            </div>
+            <div class="detail-item" style="align-items: center;">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">
+                    <span id="visitorStatus" class="status-badge status-default">Checking...</span>
+                </span>
+            </div>
+             <div class="detail-item" id="notesSection" style="display:none;">
+                <span class="detail-label">Notes:</span>
+                <span class="detail-value" id="visitorNotes" style="white-space: pre-wrap; text-align:left;">-</span>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <p id="errorText"></p>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <!-- Database Manager -->
+    <script src="js/db-manager.js"></script>
+
+    <script>
+        // Use the global dbManager instance
+        console.log('Using global DatabaseManager instance');
+
+        async function initialize() {
+            console.log('Starting initialization...');
+            try {
+                console.log('Attempting to initialize database...');
+                await dbManager.initialize();
+                console.log('Database initialized successfully');
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const visitorId = urlParams.get('visitorId');
+                console.log('Visitor ID from URL:', visitorId);
+
+                if (!visitorId) {
+                    showError('Visitor ID not provided.');
+                    return;
+                }
+
+                console.log('Fetching visitor details...');
+                await fetchVisitorDetails(visitorId);
+            } catch (error) {
+                console.error("Detailed initialization error:", error);
+                console.error("Error stack:", error.stack);
+                showError('Error initializing verification system: ' + error.message);
+            }
+        }
+
+        async function fetchVisitorDetails(visitorId) {
+            console.log('Starting fetchVisitorDetails for ID:', visitorId);
+            try {
+                console.log('Calling dbManager.getVisitor...');
+                const visitor = await dbManager.getVisitor(visitorId);
+                console.log('Visitor data received:', visitor);
+                
+                document.getElementById('loadingSpinner').style.display = 'none';
+
+                if (visitor) {
+                    console.log('Updating UI with visitor details');
+                    
+                    // Handle photo display with verification status
+                    const photoContainer = document.getElementById('visitorPhotoContainer');
+                    const photoElement = document.getElementById('visitorPhoto');
+                    const photoTimestamp = document.getElementById('photoTimestamp');
+                    const verificationStatus = document.getElementById('photoVerificationStatus');
+                    
+                    if (visitor.photoUrl) {
+                        photoElement.src = visitor.photoUrl;
+                        photoContainer.style.display = 'block';
+                        
+                        // Show photo timestamp
+                        const timestamp = visitor.updatedAt || visitor.createdAt;
+                        if (timestamp) {
+                            const date = new Date(timestamp);
+                            photoTimestamp.textContent = `Photo taken: ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                        }
+                        
+                        // Show verification status
+                        verificationStatus.innerHTML = `
+                            <div class="verification-status verified">
+                                <i class="fas fa-check-circle"></i>
+                                Photo Verified
+                            </div>
+                        `;
+                    } else {
+                        photoContainer.style.display = 'none';
+                        verificationStatus.innerHTML = `
+                            <div class="verification-status unverified">
+                                <i class="fas fa-exclamation-circle"></i>
+                                No Photo Available
+                            </div>
+                        `;
+                    }
+
+                    // Update other visitor details
+                    document.getElementById('visitorName').textContent = visitor.visitorName || 'N/A';
+                    document.getElementById('visitDate').textContent = visitor.visitDate ? 
+                        new Date(visitor.visitDate).toLocaleDateString(undefined, { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        }) : 'N/A';
+                    document.getElementById('visitTime').textContent = visitor.visitTimeFrom && visitor.visitTimeTo ? 
+                        `${visitor.visitTimeFrom} - ${visitor.visitTimeTo}` : 'N/A';
+                    document.getElementById('visitPurpose').textContent = visitor.visitPurpose || 'N/A';
+                    document.getElementById('tenantId').textContent = visitor.tenantId || 'N/A';
+                    
+                    const statusBadge = document.getElementById('visitorStatus');
+                    statusBadge.textContent = visitor.status ? 
+                        visitor.status.charAt(0).toUpperCase() + visitor.status.slice(1) : 'Unknown';
+                    statusBadge.className = 'status-badge';
+                    
+                    if (visitor.status === 'approved') {
+                        statusBadge.classList.add('status-approved');
+                    } else if (visitor.status === 'revoked') {
+                        statusBadge.classList.add('status-revoked');
+                    } else {
+                        statusBadge.classList.add('status-default');
+                    }
+                    
+                    if (visitor.visitorNotes && visitor.visitorNotes.trim() !== '') {
+                        document.getElementById('visitorNotes').textContent = visitor.visitorNotes;
+                        document.getElementById('notesSection').style.display = 'flex';
+                    }
+
+                    document.getElementById('visitorDetailsContainer').style.display = 'block';
+                    console.log('UI updated successfully');
+                } else {
+                    console.log('No visitor found for ID:', visitorId);
+                    showError('Visitor record not found.');
+                }
+            } catch (error) {
+                console.error("Detailed fetch error:", error);
+                console.error("Error stack:", error.stack);
+                showError('Error fetching visitor details: ' + error.message);
+            }
+        }
+
+        function showError(message) {
+            console.error('Showing error:', message);
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+        
+        // Initialize when the page loads
+        console.log('Setting up DOMContentLoaded listener');
+        document.addEventListener('DOMContentLoaded', initialize);
+
+        // Add zoom feature for visitor photo
+        document.addEventListener('DOMContentLoaded', function() {
+            const photo = document.getElementById('visitorPhoto');
+            if (photo) {
+                photo.addEventListener('click', function() {
+                    if (!photo.src) return;
+                    // Create overlay
+                    const overlay = document.createElement('div');
+                    overlay.className = 'photo-zoom-overlay';
+                    overlay.innerHTML = `<img src="${photo.src}" alt="Zoomed Visitor Photo" />`;
+                    document.body.appendChild(overlay);
+                    // Close on click
+                    overlay.addEventListener('click', function() {
+                        overlay.remove();
+                    });
+                    // Optional: close on ESC key
+                    function escListener(e) {
+                        if (e.key === 'Escape') {
+                            overlay.remove();
+                            document.removeEventListener('keydown', escListener);
+                        }
+                    }
+                    document.addEventListener('keydown', escListener);
+                });
+            }
+        });
+    </script>
+
+    <!-- Firebase SDKs (will be used if Firebase is configured) -->
+    <script type="module" src="js/init-sync.js"></script>
+</body>
+</html> 

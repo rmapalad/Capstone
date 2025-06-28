@@ -1,0 +1,173 @@
+# Advanced NLP Implementation Guide
+
+This document provides a comprehensive, step-by-step technical guide to implementing the advanced NLP (Natural Language Processing) system as used in the current project. It is reverse-engineered from the codebase and is intended to enable a developer to reimplement the system in a new project folder, including backend, frontend, and database integration.
+
+---
+
+## Table of Contents
+1. Overview
+2. Backend (Python NLP Service)
+   - File Structure
+   - Dependencies
+   - Core Logic
+   - API Endpoints
+   - Deployment & CORS
+3. Frontend (JavaScript Integration)
+   - File Structure
+   - Complaint Processing Flow
+   - UI Integration
+4. Database Integration
+   - IndexedDB (Local)
+   - Firestore (Cloud Sync)
+   - Data Model
+5. End-to-End Data Flow
+6. Configuration & Environment
+7. Migration/Porting Checklist
+
+---
+
+## 1. Overview
+
+The advanced NLP system classifies, extracts, and processes tenant complaints using a Python backend (Flask, spaCy, NLTK, scikit-learn) and integrates with a JavaScript frontend. Complaints are processed via HTTP endpoints, and results are stored in both local (IndexedDB) and cloud (Firestore) databases. The system supports English and Tagalog, and provides urgency, category, and location extraction.
+
+---
+
+## 2. Backend (Python NLP Service)
+
+### File Structure
+- `py/complaints_processor.py` (Main NLP logic and Flask API)
+- `py/requirements.txt` (Python dependencies)
+
+### Dependencies
+Install via `pip install -r requirements.txt`:
+- flask
+- flask-cors
+- nltk
+- spacy
+- pandas
+- scikit-learn
+- gunicorn
+- polyglot (optional, for Filipino)
+- py-translate (optional)
+
+### Core Logic
+- **Language Detection:** Detects if complaint is in English or Tagalog using keyword heuristics.
+- **Preprocessing:** Tokenizes, removes stopwords, and lemmatizes (English) or normalizes (Tagalog) complaint text.
+- **ML Model:** Trains a Naive Bayes classifier (scikit-learn) on a set of labeled English/Tagalog complaints for category prediction.
+- **Location Extraction:** Uses spaCy NER and keyword matching to extract locations.
+- **Urgency Detection:** Uses keyword matching to assign urgency (High/Medium/Low).
+- **Maintenance Personnel:** Maps categories to default personnel.
+- **Category/Urgency Labels:** Provides user-friendly labels in both languages.
+
+### API Endpoints
+- `POST /process-complaint`  
+  - Input: `{ complaint: <string> }`
+  - Output: NLP results (category, location, urgency, labels, etc.)
+- `GET /categories?language=english|tagalog`  
+  - Output: Category labels for dropdowns.
+- `GET /health`  
+  - Output: Service health status.
+
+### Deployment & CORS
+- Run locally: `python py/complaints_processor.py`
+- Flask app runs on `http://localhost:5000` by default.
+- CORS is enabled for all routes (`flask_cors.CORS(app)`).
+- For production, use Gunicorn or similar WSGI server.
+
+---
+
+## 3. Frontend (JavaScript Integration)
+
+### File Structure
+- `js/complaint-manager.js` (Handles NLP API calls, complaint object creation)
+- `tenant-dashboard.html` (UI, calls complaintManager, displays NLP results)
+- `js/db-manager.js` (IndexedDB logic)
+- `js/db-sync-wrapper.js` (Syncs IndexedDB with Firestore)
+- `js/firebase-sync.js` (Firestore sync logic)
+- `js/firebase-config.js` (Firebase initialization)
+
+### Complaint Processing Flow
+1. **User submits complaint** via UI (e.g., `tenant-dashboard.html`).
+2. **Frontend (`complaint-manager.js`)** sends complaint text to `/process-complaint` endpoint.
+3. **Receives NLP results** (category, urgency, location, etc.).
+4. **Creates complaint object** with all NLP fields.
+5. **Saves complaint** to IndexedDB via `dbManager.createComplaint`.
+6. **Syncs complaint** to Firestore via `db-sync-wrapper.js` and `firebase-sync.js`.
+
+### UI Integration
+- UI calls `complaintManager.processComplaint(description, tenantId, previewOnly)`.
+- Displays NLP results (category, location, urgency) in the dashboard.
+- Handles fallback if NLP backend is unavailable (uses keyword-based JS fallback).
+
+---
+
+## 4. Database Integration
+
+### IndexedDB (Local)
+- Managed by `js/db-manager.js`.
+- Stores all complaints, including NLP fields (`category`, `categoryLabel`, `urgency`, `urgencyLabel`, `nlpProcessed`, etc.).
+
+### Firestore (Cloud Sync)
+- Managed by `js/firebase-sync.js` and `js/db-sync-wrapper.js`.
+- Complaints are pushed to Firestore after creation/update.
+- Firestore rules and indexes are defined in `firestore.rules` and `firestore.indexes.json`.
+
+### Data Model (Complaint Example)
+```json
+{
+  "tenantId": "...",
+  "description": "...",
+  "category": "electrical",
+  "categoryLabel": "Electrical",
+  "location": "Bathroom",
+  "urgency": "High",
+  "urgencyLabel": "High Priority",
+  "nlpProcessed": true,
+  "detectedLanguage": "english",
+  "maintenanceContact": { ... },
+  "createdAt": "...",
+  "status": "pending"
+}
+```
+
+---
+
+## 5. End-to-End Data Flow
+1. **User submits complaint** in UI.
+2. **Frontend** sends complaint to Python NLP backend (`/process-complaint`).
+3. **Backend** returns NLP results.
+4. **Frontend** creates and saves complaint object (with NLP fields) to IndexedDB.
+5. **Sync wrapper** pushes complaint to Firestore.
+6. **UI** displays NLP results and complaint status.
+
+---
+
+## 6. Configuration & Environment
+- **Python:** Install all dependencies from `py/requirements.txt`.
+- **Frontend:** Ensure all JS files are included and Firebase is initialized.
+- **CORS:** Must be enabled on the backend for cross-origin requests.
+- **Endpoints:** Frontend must point to the correct backend URL (update `apiUrl` in `complaint-manager.js` if needed).
+- **Firestore:** Set up rules and indexes as needed.
+
+---
+
+## 7. Migration/Porting Checklist
+- [ ] Copy `py/complaints_processor.py` and `py/requirements.txt` to new backend folder.
+- [ ] Install Python dependencies (`pip install -r requirements.txt`).
+- [ ] Start the backend (`python complaints_processor.py`).
+- [ ] Copy `js/complaint-manager.js`, `js/db-manager.js`, `js/db-sync-wrapper.js`, `js/firebase-sync.js`, `js/firebase-config.js` to new frontend project.
+- [ ] Update `apiUrl` in `complaint-manager.js` to point to your backend.
+- [ ] Ensure `tenant-dashboard.html` (or equivalent) calls `complaintManager.processComplaint` and displays NLP results.
+- [ ] Set up Firestore and copy `firestore.rules` and `firestore.indexes.json` if needed.
+- [ ] Test end-to-end: Submit a complaint, check NLP results, and verify data in Firestore.
+
+---
+
+## 8. Additional Notes
+- **Fallback:** If the backend is unavailable, the frontend uses a JS-based keyword fallback for classification.
+- **Extensibility:** You can add more categories, languages, or ML models by extending the backend logic and retraining the model.
+- **Security:** Secure your backend endpoints and Firestore rules for production.
+
+---
+
+**This guide should enable a developer to fully reimplement the advanced NLP system in a new project folder, with all backend, frontend, and database integration details.** 

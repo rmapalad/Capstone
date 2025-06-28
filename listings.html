@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Units - Property Name</title>
+    <title>Available Listings</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Navigation (copied from index.html) -->
     <nav class="navbar">
-        <div class="logo">Property Name</div>
+        <div class="logo">PRF</div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html" class="active">Home</a></li>
             <li><a href="index.html#gallery">Gallery</a></li>
             <li><a href="index.html#offerings">Offerings</a></li>
-            <li><a href="listings.html" class="active">Listings</a></li>
+            <li><a href="listings.html">Listings</a></li>
             <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="login.html" class="login-link"><i class="fas fa-user"></i> Login</a></li>
         </ul>
         <div class="hamburger">
             <span></span>
@@ -24,24 +25,19 @@
             <span></span>
         </div>
     </nav>
-
-    <!-- Listings Header -->
     <section class="listings-header">
         <div class="container">
-            <h1>Available Units</h1>
+            <h1>Available Listings</h1>
             <p>Find your perfect space in our property</p>
             <div class="search-bar">
-                <input type="text" placeholder="Search by location, type, or features...">
-                <button><i class="fas fa-search"></i></button>
+                <input type="text" id="searchKeyword" placeholder="Search by location, type, or features...">
+                <button id="searchButton"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </section>
-
-    <!-- Listings Section -->
     <section class="listings">
         <div class="container">
-            <!-- Filters -->
-            <div class="listings-filters">
+            <div class="listings-filters mb-4">
                 <div class="filter-group">
                     <label for="property-type">Property Type</label>
                     <select id="property-type">
@@ -90,375 +86,118 @@
                         <option value="custom">Custom Date</option>
                     </select>
                 </div>
-                <button class="filter-btn">Apply Filters</button>
-                <button class="reset-btn">Reset Filters</button>
+                <button class="btn btn-success" id="applyFilters">Apply Filters</button>
+                <button class="btn btn-outline-secondary" id="resetFilters">Reset Filters</button>
             </div>
-
-            <!-- Listings Grid -->
-            <div class="listings-grid">
-                <!-- Listing Item 1 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Luxury Apartment">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-swimming-pool"></i></span>
-                            <span><i class="fas fa-dumbbell"></i></span>
-                        </div>
+            <div class="listings-grid" id="publicListingsGrid">
+                <div class="text-center py-5 w-100">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    <div class="listing-content">
-                        <h3>Luxury Studio Apartment</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-bed"></i> Studio</span>
-                            <span><i class="fas fa-bath"></i> 1 Bath</span>
-                            <span><i class="fas fa-ruler-combined"></i> 45 sqm</span>
-                            <span><i class="fas fa-building"></i> 3rd Floor</span>
-                        </div>
-                        <p class="listing-description">Modern studio apartment with premium finishes, high ceilings, and city views. Features include built-in storage, modern appliances, and a private balcony.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Pool</span>
-                            <span>Gym</span>
-                            <span>Security</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱15,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱30,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
+                    <p class="mt-3">Loading listings...</p>
                 </div>
-
-                <!-- Listing Item 2 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Commercial Space">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-shield-alt"></i></span>
-                            <span><i class="fas fa-truck"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Prime Retail Space</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-store"></i> Retail</span>
-                            <span><i class="fas fa-door-open"></i> 2 Entrances</span>
-                            <span><i class="fas fa-ruler-combined"></i> 80 sqm</span>
-                            <span><i class="fas fa-building"></i> Ground Floor</span>
-                        </div>
-                        <p class="listing-description">High-traffic retail space with excellent visibility and modern amenities. Perfect for retail stores, restaurants, or service businesses. Includes storage room and staff facilities.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Security</span>
-                            <span>Loading Area</span>
-                            <span>Storage</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱25,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱50,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 3 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Event Space">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-utensils"></i></span>
-                            <span><i class="fas fa-wifi"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Elegant Event Venue</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-users"></i> 200 Capacity</span>
-                            <span><i class="fas fa-parking"></i> 50 Cars</span>
-                            <span><i class="fas fa-ruler-combined"></i> 150 sqm</span>
-                            <span><i class="fas fa-building"></i> 2nd Floor</span>
-                        </div>
-                        <p class="listing-description">Versatile event space perfect for corporate events, weddings, and social gatherings. Features include a stage, professional lighting, sound system, and catering kitchen.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Catering</span>
-                            <span>WiFi</span>
-                            <span>AV Equipment</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱35,000</span>
-                            <span class="period">/day</span>
-                            <span class="deposit">+ ₱20,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 4 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="1 Bedroom Apartment">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-wifi"></i></span>
-                            <span><i class="fas fa-umbrella-beach"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Cozy 1-Bedroom Apartment</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-bed"></i> 1 Bedroom</span>
-                            <span><i class="fas fa-bath"></i> 1 Bath</span>
-                            <span><i class="fas fa-ruler-combined"></i> 55 sqm</span>
-                            <span><i class="fas fa-building"></i> 5th Floor</span>
-                        </div>
-                        <p class="listing-description">Bright and airy one-bedroom apartment with modern finishes. Features include a fully equipped kitchen, built-in wardrobes, and a private balcony with city views.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>WiFi</span>
-                            <span>Pool</span>
-                            <span>Gym</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱18,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱36,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 5 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="2 Bedroom Apartment">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-dumbbell"></i></span>
-                            <span><i class="fas fa-swimming-pool"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Spacious 2-Bedroom Apartment</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-bed"></i> 2 Bedrooms</span>
-                            <span><i class="fas fa-bath"></i> 2 Baths</span>
-                            <span><i class="fas fa-ruler-combined"></i> 85 sqm</span>
-                            <span><i class="fas fa-building"></i> 8th Floor</span>
-                        </div>
-                        <p class="listing-description">Luxurious two-bedroom apartment with premium finishes and panoramic city views. Features include a modern kitchen, spacious living area, and two private balconies.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Gym</span>
-                            <span>Pool</span>
-                            <span>Security</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱25,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱50,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 6 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Office Space">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-wifi"></i></span>
-                            <span><i class="fas fa-shield-alt"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Modern Office Space</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-building"></i> Office</span>
-                            <span><i class="fas fa-users"></i> 10-15 People</span>
-                            <span><i class="fas fa-ruler-combined"></i> 100 sqm</span>
-                            <span><i class="fas fa-building"></i> 4th Floor</span>
-                        </div>
-                        <p class="listing-description">Contemporary office space with modern amenities and natural light. Perfect for startups and small businesses. Includes meeting rooms, reception area, and high-speed internet.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>WiFi</span>
-                            <span>Security</span>
-                            <span>Meeting Rooms</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱30,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱60,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 7 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="3 Bedroom Apartment">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-swimming-pool"></i></span>
-                            <span><i class="fas fa-dumbbell"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Luxury 3-Bedroom Apartment</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-bed"></i> 3 Bedrooms</span>
-                            <span><i class="fas fa-bath"></i> 2.5 Baths</span>
-                            <span><i class="fas fa-ruler-combined"></i> 120 sqm</span>
-                            <span><i class="fas fa-building"></i> 12th Floor</span>
-                        </div>
-                        <p class="listing-description">Premium three-bedroom apartment with panoramic city views. Features include a gourmet kitchen, walk-in closets, and a spacious living area perfect for entertaining.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Pool</span>
-                            <span>Gym</span>
-                            <span>Security</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱35,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱70,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 8 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Restaurant Space">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-utensils"></i></span>
-                            <span><i class="fas fa-truck"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Restaurant Space</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-store"></i> Restaurant</span>
-                            <span><i class="fas fa-users"></i> 50 Seats</span>
-                            <span><i class="fas fa-ruler-combined"></i> 90 sqm</span>
-                            <span><i class="fas fa-building"></i> Ground Floor</span>
-                        </div>
-                        <p class="listing-description">Prime restaurant space with high foot traffic. Features include a fully equipped kitchen, storage area, and outdoor seating. Perfect for new restaurant concepts.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>Kitchen</span>
-                            <span>Storage</span>
-                            <span>Outdoor Seating</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱40,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱80,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Listing Item 9 -->
-                <div class="listing-item">
-                    <div class="listing-image">
-                        <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Co-working Space">
-                        <div class="listing-status">Available</div>
-                        <div class="listing-features">
-                            <span><i class="fas fa-parking"></i></span>
-                            <span><i class="fas fa-wifi"></i></span>
-                            <span><i class="fas fa-coffee"></i></span>
-                        </div>
-                    </div>
-                    <div class="listing-content">
-                        <h3>Co-working Space</h3>
-                        <div class="listing-details">
-                            <span><i class="fas fa-building"></i> Co-working</span>
-                            <span><i class="fas fa-users"></i> 20 Desks</span>
-                            <span><i class="fas fa-ruler-combined"></i> 110 sqm</span>
-                            <span><i class="fas fa-building"></i> 6th Floor</span>
-                        </div>
-                        <p class="listing-description">Modern co-working space with flexible desk arrangements. Features include high-speed internet, meeting rooms, and a communal kitchen. Perfect for freelancers and small teams.</p>
-                        <div class="listing-amenities">
-                            <span>Parking</span>
-                            <span>WiFi</span>
-                            <span>Kitchen</span>
-                            <span>Meeting Rooms</span>
-                        </div>
-                        <div class="listing-price">
-                            <span class="price">₱28,000</span>
-                            <span class="period">/month</span>
-                            <span class="deposit">+ ₱56,000 deposit</span>
-                        </div>
-                        <div class="listing-actions">
-                            <a href="#" class="view-details">View Details</a>
-                            <a href="#" class="contact-agent">Contact Agent</a>
-                            <a href="#" class="schedule-viewing">Schedule Viewing</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pagination -->
-            <div class="pagination">
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#" class="next">Next <i class="fas fa-chevron-right"></i></a>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
+    <!-- Premium Modal -->
+    <div class="modal fade modal-premium" id="viewListingModal" tabindex="-1" aria-labelledby="viewListingModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="viewListingModalLabel">Listing Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="listingDetailsContent">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Schedule Viewing Modal -->
+    <div class="modal fade" id="scheduleViewingModal" tabindex="-1" aria-labelledby="scheduleViewingModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 16px; box-shadow: 0 6px 32px #0001; overflow: hidden;">
+          <div class="modal-header" style="background: #2563eb; color: #fff; border-bottom: none; padding: 1.2rem 1.7rem 1rem 1.7rem; align-items: flex-start;">
+            <div style="display: flex; align-items: center; gap: 0.7em;">
+              <i class="fas fa-calendar-plus" style="font-size: 1.5rem;"></i>
+              <div>
+                <h5 class="modal-title mb-0" id="scheduleViewingModalLabel" style="font-size: 1.18rem; font-weight: 800; letter-spacing: 0.01em;">Schedule a Viewing</h5>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background: #fff; color: #374151; opacity: 0.8; margin-left: auto;"></button>
+          </div>
+          <div class="modal-body" style="background: #f4f7fb; padding: 2rem 1.5rem 1.2rem 1.5rem; border-radius: 0 0 16px 16px;">
+            <form id="scheduleViewingForm" style="max-width: 400px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 1.5rem 1.2rem 1rem 1.2rem; display: flex; flex-direction: column; gap: 1rem;">
+              <div class="mb-2">
+                <label for="svName" class="form-label" style="font-weight: 700;">Full Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="svName" required maxlength="60" placeholder="Enter your name" style="border-radius: 8px;">
+              </div>
+              <div class="mb-2">
+                <label for="svContact" class="form-label" style="font-weight: 700;">Contact Number <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control" id="svContact" required maxlength="20" placeholder="Enter your contact number" style="border-radius: 8px;">
+              </div>
+              <div class="mb-2">
+                <label for="svEmail" class="form-label" style="font-weight: 700;">Email (optional)</label>
+                <input type="email" class="form-control" id="svEmail" maxlength="60" placeholder="Enter your email (optional)" style="border-radius: 8px;">
+              </div>
+              <div class="mb-2">
+                <label for="svDate" class="form-label" style="font-weight: 700;">Preferred Date <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="svDate" required min="${new Date().toISOString().split('T')[0]}" style="border-radius: 8px;">
+              </div>
+              <div class="mb-2">
+                <label for="svTime" class="form-label" style="font-weight: 700;">Preferred Time <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" id="svTime" required style="border-radius: 8px;">
+              </div>
+              <input type="hidden" id="svPropertyTitle">
+              <hr style="margin: 0.7em 0 0.5em 0; border-top: 1.2px solid #e3e8ef;">
+              <div class="d-flex justify-content-between align-items-center mt-2" style="gap: 0.7em;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 7px; font-weight: 500; padding: 0.6em 1.2em; font-size: 1em; border: 1.5px solid #cbd5e1; background: #f7fafc; color: #374151; box-shadow: none; transition: background 0.2s, color 0.2s;">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="scheduleSubmitBtn" style="border-radius: 7px; font-weight: 700; min-width: 120px; font-size: 1.03em; padding: 0.6em 1.4em; background: #2563eb; color: #fff; border: none; box-shadow: 0 2px 8px #2563eb11; letter-spacing: 0.01em; transition: background 0.2s, box-shadow 0.2s;">Submit</button>
+              </div>
+              <style>
+              #scheduleSubmitBtn:hover {
+                background: #1746a0 !important;
+                color: #fff !important;
+                box-shadow: 0 4px 16px #2563eb22;
+              }
+              .btn-outline-secondary:hover {
+                background: #e3e8ef !important;
+                color: #111827 !important;
+                border-color: #b6c3d1 !important;
+              }
+              </style>
+              <div class="text-center mt-2" style="font-size: 0.93em; color: #6b7280; opacity: 0.85;">
+                <i class="fas fa-lock me-1"></i>Your information is secure and will only be used for scheduling.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="bookingConfirmationModal" tabindex="-1" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 18px; box-shadow: 0 12px 48px #2563eb22, 0 2px 8px #22c55e11; overflow: hidden; background: #f7fafc; position: relative;">
+          <!-- Accent bar -->
+          <div style="height: 8px; width: 100%; background: linear-gradient(90deg, #22c55e 0%, #2563eb 100%); position: absolute; top: 0; left: 0;"></div>
+          <div class="modal-body text-center" style="padding: 2.7rem 2.2rem 2.2rem 2.2rem; position: relative;">
+            <!-- Friendly illustration/icon -->
+            <div style="margin-bottom: 1.2rem;">
+              <span style="display: inline-block; background: #fff; color: #22c55e; border-radius: 50%; width: 80px; height: 80px; line-height: 80px; font-size: 2.7rem; box-shadow: 0 2px 16px #22c55e22, 0 1.5px 8px #2563eb11; border: 3px solid #22c55e;">
+                <i class="fas fa-check-circle"></i>
+              </span>
+            </div>
+            <h3 style="font-weight: 900; color: #2563eb; margin-bottom: 0.3em; letter-spacing: 0.01em;">Booking Confirmed!</h3>
+            <div style="font-size: 1.13em; color: #2563eb; font-weight: 600; margin-bottom: 0.7em;">Thank you for scheduling your viewing with us.</div>
+            <!-- Booking summary card -->
+            <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 12px #2563eb11; display: inline-block; padding: 1.1em 1.7em; margin-bottom: 1.3em; text-align: left; min-width: 220px;">
+              <div id="confirmationDetails" style="font-size: 1.08em; color: #374151;"></div>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 700; min-width: 130px; font-size: 1.07em; padding: 0.7em 1.6em; background: #2563eb; color: #fff; border: none; box-shadow: 0 2px 8px #2563eb11; letter-spacing: 0.01em;">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -469,10 +208,9 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#home">Home</a></li>
                         <li><a href="index.html#gallery">Gallery</a></li>
                         <li><a href="index.html#offerings">Offerings</a></li>
-                        <li><a href="listings.html">Listings</a></li>
                         <li><a href="index.html#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -491,7 +229,527 @@
             </div>
         </div>
     </footer>
-
+    <!-- Scripts: order matters! -->
     <script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/db-manager.js"></script>
+    <script src="js/booking-db.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Listings logic (keep as is) -->
+    <script>
+    // --- Utility Functions ---
+    function formatPrice(price) {
+        return '₱' + (price ? price.toLocaleString() : '0');
+    }
+    function formatStatus(status) {
+        const statusMap = {
+            'available': 'Available',
+            'rented': 'Rented',
+            'maintenance': 'Under Maintenance',
+            'pending': 'Pending',
+            'inactive': 'Inactive',
+            'active': 'Available'
+        };
+        return statusMap[status] || status;
+    }
+    function getStatusClass(status) {
+        switch (status) {
+            case 'available': case 'active': return 'status-available';
+            case 'rented': return 'status-rented';
+            case 'maintenance': return 'status-maintenance';
+            case 'pending': return 'status-pending';
+            case 'inactive': return 'status-inactive';
+            default: return '';
+        }
+    }
+    function getFeatureIcon(feature) {
+        switch ((feature||'').toLowerCase()) {
+            case 'wifi': return 'fa-wifi';
+            case 'parking': return 'fa-parking';
+            case 'pool': return 'fa-swimming-pool';
+            case 'ac': return 'fa-snowflake';
+            case 'balcony': return 'fa-door-open';
+            case 'gym': return 'fa-dumbbell';
+            case 'security': return 'fa-shield-alt';
+            case 'elevator': return 'fa-arrow-up';
+            case 'furnished': return 'fa-couch';
+            default: return 'fa-check';
+        }
+    }
+    // --- Pagination State ---
+    let allListings = [];
+    let isLoading = false;
+    const PAGE_SIZE = 12;
+    let currentPage = 1;
+
+    // --- Skeleton Loader ---
+    function renderSkeletonLoader(count = PAGE_SIZE) {
+        const grid = document.getElementById('publicListingsGrid');
+        grid.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+            const skeleton = document.createElement('div');
+            skeleton.className = 'listing-card skeleton-card';
+            skeleton.innerHTML = `
+                <div class="listing-image skeleton-bg"></div>
+                <div class="listing-content">
+                    <div class="listing-title skeleton-bg" style="height: 24px; width: 60%; margin-bottom: 12px;"></div>
+                    <div class="listing-details skeleton-bg" style="height: 18px; width: 80%; margin-bottom: 12px;"></div>
+                    <div class="listing-description skeleton-bg" style="height: 36px; width: 100%; margin-bottom: 12px;"></div>
+                    <div class="listing-amenities skeleton-bg" style="height: 18px; width: 50%; margin-bottom: 12px;"></div>
+                </div>
+            `;
+            grid.appendChild(skeleton);
+        }
+    }
+
+    // --- Main Listing Logic (No Backend Pagination) ---
+    async function loadListings(options = {}) {
+        if (isLoading) return;
+        isLoading = true;
+        renderSkeletonLoader();
+        try {
+            await window.dbManager.initialize();
+            const listings = await window.dbManager.getAllListings(options);
+            allListings = listings;
+            currentPage = 1;
+            renderPaginatedListings();
+        } catch (error) {
+            document.getElementById('publicListingsGrid').innerHTML = `<div class=\"text-center py-5 w-100\"><i class=\"fas fa-exclamation-triangle fs-1 text-danger mb-3\"></i><h4>Error loading listings</h4><p>${error.message || 'Please try again later'}</p></div>`;
+        }
+        isLoading = false;
+    }
+
+    function renderPaginatedListings() {
+        const start = (currentPage - 1) * PAGE_SIZE;
+        const end = start + PAGE_SIZE;
+        const pageListings = allListings.slice(start, end);
+        renderPublicListings(pageListings);
+        renderPaginationBar();
+        // Scroll to listings section
+        const listingsSection = document.querySelector('.listings-header') || document.querySelector('.listings');
+        if (listingsSection) {
+            listingsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function renderPaginationBar() {
+        let bar = document.getElementById('premiumPaginationBar');
+        if (!bar) {
+            bar = document.createElement('div');
+            bar.id = 'premiumPaginationBar';
+            bar.style = 'display: flex; justify-content: center; align-items: center; margin: 2em 0 1.5em 0;';
+            document.querySelector('.listings .container').appendChild(bar);
+        }
+        const totalPages = Math.ceil(allListings.length / PAGE_SIZE) || 1;
+        if (totalPages <= 1) { bar.innerHTML = ''; return; }
+        let html = `<div class='premium-pagination' style='display: flex; gap: 0.5em; background: #fff; border-radius: 16px; box-shadow: 0 2px 16px #2563eb11; padding: 0.7em 1.2em;'>`;
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class='premium-page-btn${i === currentPage ? ' active' : ''}' data-page='${i}' style='font-weight: 700; border: none; outline: none; border-radius: 8px; padding: 0.6em 1.3em; font-size: 1.08em; background: ${i === currentPage ? '#2563eb' : '#22c55e'}; color: #fff; box-shadow: 0 2px 8px ${i === currentPage ? '#2563eb22' : '#22c55e22'}; transition: background 0.2s, box-shadow 0.2s; cursor: pointer;'>${i}</button>`;
+        }
+        html += `</div>`;
+        bar.innerHTML = html;
+        // Add event listeners
+        bar.querySelectorAll('.premium-page-btn').forEach(btn => {
+            btn.onclick = function() {
+                const page = parseInt(this.getAttribute('data-page'));
+                if (page !== currentPage) {
+                    currentPage = page;
+                    renderPaginatedListings();
+                }
+            };
+        });
+        // Add premium CSS
+        if (!document.getElementById('premiumPaginationStyles')) {
+            const style = document.createElement('style');
+            style.id = 'premiumPaginationStyles';
+            style.innerHTML = `
+                .premium-pagination { justify-content: center; }
+                .premium-page-btn { background: #22c55e; color: #fff; border: none; border-radius: 8px; margin: 0 0.1em; font-weight: 700; transition: background 0.2s, box-shadow 0.2s; }
+                .premium-page-btn.active, .premium-page-btn:hover { background: #2563eb !important; color: #fff !important; box-shadow: 0 4px 16px #2563eb22; }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // --- Optimize Images ---
+    function getThumbnail(listing) {
+        if (listing.thumbnail) return listing.thumbnail;
+        if (listing.images && listing.images.length > 0) return listing.images[0];
+        if (listing.imageUrl) return listing.imageUrl;
+        return 'https://via.placeholder.com/400x300?text=Property+Image';
+    }
+
+    // --- Render Listings (use getThumbnail) ---
+    function renderPublicListings(listings) {
+        const grid = document.getElementById('publicListingsGrid');
+        grid.innerHTML = '';
+        if (!listings || listings.length === 0) {
+            grid.innerHTML = `<div class="text-center py-5 w-100"><i class="fas fa-info-circle fs-1 text-muted mb-3"></i><h4>No listings found</h4></div>`;
+            return;
+        }
+        listings.forEach(listing => {
+            const card = document.createElement('div');
+            card.className = 'listing-card';
+            card.setAttribute('data-status', listing.status);
+            const images = [getThumbnail(listing)];
+            // Features
+            let featuresHtml = '';
+            if (listing.features && listing.features.length > 0) {
+                featuresHtml = `<div class="listing-features">${listing.features.slice(0, 4).map(f => `<span title="${f}"><i class="fas ${getFeatureIcon(f)}"></i></span>`).join('')}</div>`;
+            } else if (listing.amenities && listing.amenities.length > 0) {
+                featuresHtml = `<div class="listing-features">${listing.amenities.slice(0, 4).map(f => `<span title="${f}"><i class="fas ${getFeatureIcon(f)}"></i></span>`).join('')}</div>`;
+            }
+            // Amenities (optional, fallback to features)
+            let amenitiesHtml = '';
+            if (listing.amenities && listing.amenities.length > 0) {
+                amenitiesHtml = `<div class="listing-amenities">${listing.amenities.map(a => `<span>${a}</span>`).join('')}</div>`;
+            } else if (listing.features && listing.features.length > 0) {
+                amenitiesHtml = `<div class="listing-amenities">${listing.features.map(f => `<span>${f}</span>`).join('')}</div>`;
+            }
+            // Description (truncate to 3 lines, add tooltip for full)
+            let desc = listing.description || '';
+            let descShort = desc.length > 180 ? desc.slice(0, 180) + '...' : desc;
+            // Details (type, area, etc.)
+            let detailsHtml = '';
+            detailsHtml += `<span><i class="fas fa-home"></i> ${listing.propertyType || listing.type || ''}</span>`;
+            if (listing.area || listing.sqft) detailsHtml += `<span><i class="fas fa-ruler-combined"></i> ${listing.area || listing.sqft} sqm</span>`;
+            if (listing.location) detailsHtml += `<span><i class="fas fa-map-marker-alt"></i> ${listing.location}</span>`;
+            if (listing.floor) detailsHtml += `<span><i class="fas fa-building"></i> ${listing.floor}</span>`;
+            if (listing.bedrooms !== undefined) detailsHtml += `<span><i class="fas fa-bed"></i> ${listing.bedrooms} Bed${listing.bedrooms > 1 ? 's' : ''}</span>`;
+            if (listing.bathrooms !== undefined) detailsHtml += `<span><i class="fas fa-bath"></i> ${listing.bathrooms} Bath${listing.bathrooms > 1 ? 's' : ''}</span>`;
+            // Card HTML
+            card.innerHTML = `
+                <div class="listing-image">
+                    <img src="${images[0]}" alt="${listing.title}">
+                    <button class="carousel-btn left" style="display:${images.length>1?'block':'none'}"><i class="fas fa-chevron-left"></i></button>
+                    <button class="carousel-btn right" style="display:${images.length>1?'block':'none'}"><i class="fas fa-chevron-right"></i></button>
+                    <div class="listing-price-badge">${formatPrice(listing.price)}</div>
+                    <div class="listing-status ${getStatusClass(listing.status)}">${formatStatus(listing.status)}</div>
+                    ${featuresHtml}
+                </div>
+                <div class="listing-content">
+                    <div class="listing-title">${listing.title || 'Untitled'}</div>
+                    <div class="listing-details">${detailsHtml}</div>
+                    <p class="listing-description" title="${desc.replace(/"/g, '&quot;')}">${descShort}</p>
+                    ${amenitiesHtml}
+                    <div class="listing-actions">
+                        <a href="#" class="view-details" data-id="${listing.id}">View Details</a>
+                        <a href="#" class="contact-agent" data-id="${listing.id}">Contact</a>
+                        <a href="#" class="schedule-viewing" data-id="${listing.id}">Schedule</a>
+                    </div>
+                </div>
+            `;
+            // Carousel logic
+            if (images.length > 1) {
+                const img = card.querySelector('img');
+                const leftBtn = card.querySelector('.carousel-btn.left');
+                const rightBtn = card.querySelector('.carousel-btn.right');
+                let currentIndex = 0;
+                leftBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    img.src = images[currentIndex];
+        });
+                rightBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    currentIndex = (currentIndex + 1) % images.length;
+                    img.src = images[currentIndex];
+                });
+            }
+            // View details modal
+            card.querySelector('.view-details').addEventListener('click', function(e) {
+                e.preventDefault();
+                showListingModal(listing);
+            });
+            grid.appendChild(card);
+        });
+        attachScheduleButtons();
+    }
+    // --- Modal Logic ---
+    function showListingModal(listing) {
+        const images = listing.images && listing.images.length > 0 ? listing.images : [listing.imageUrl || 'https://via.placeholder.com/600x400?text=No+Image'];
+        let featuresHtml = '<span class="text-muted">N/A</span>';
+        if (listing.features && listing.features.length > 0) {
+            featuresHtml = listing.features.map(feature => `<span class="badge me-1" style="background: #e3e8ef; color: #2563eb; font-weight: 600; font-size: 0.97em; border-radius: 6px; padding: 0.18em 0.7em;">${feature}</span>`).join('');
+        }
+        const statusClass = getStatusClass(listing.status);
+        // Add a lightbox overlay for image enlargement with navigation
+        if (!document.getElementById('imageLightboxOverlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'imageLightboxOverlay';
+            overlay.style = 'display:none; position:fixed; z-index:2000; top:0; left:0; width:100vw; height:100vh; background:rgba(30,41,59,0.92); align-items:center; justify-content:center;';
+            overlay.innerHTML = `
+                <button id="lightboxClose" aria-label="Close" style="position:absolute;top:2vw;right:2vw;background:rgba(0,0,0,0.3);border:none;border-radius:50%;width:44px;height:44px;color:#fff;font-size:1.7rem;z-index:20;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class='fas fa-times'></i></button>
+                <button id="lightboxPrev" style="position:absolute;left:2vw;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.3);border:none;border-radius:50%;width:48px;height:48px;color:#fff;font-size:2rem;z-index:10;cursor:pointer;display:none;"><i class='fas fa-chevron-left'></i></button>
+                <img id="lightboxImg" src="" alt="Enlarged" style="max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 4px 32px #0008;">
+                <button id="lightboxNext" style="position:absolute;right:2vw;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.3);border:none;border-radius:50%;width:48px;height:48px;color:#fff;font-size:2rem;z-index:10;cursor:pointer;display:none;"><i class='fas fa-chevron-right'></i></button>
+            `;
+            overlay.onclick = function(e) { if (e.target === overlay) overlay.style.display = 'none'; };
+            document.body.appendChild(overlay);
+        }
+        document.getElementById('listingDetailsContent').innerHTML = `
+            <style>
+                #viewListingModal .modal-header { font-size: 1.05rem !important; padding: 0.7rem 1.2rem !important; }
+                #viewListingModal .modal-title { font-size: 1.08rem !important; font-weight: 700; }
+                #viewListingModal .btn-close {
+                    background: none !important;
+                    border: none;
+                    font-size: 1.5rem;
+                    color: #374151;
+                    opacity: 0.8;
+                    position: absolute;
+                    right: 1.2rem;
+                    top: 0.7rem;
+                    z-index: 10;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 2.2rem;
+                    height: 2.2rem;
+                    border-radius: 50%;
+                    transition: background 0.2s;
+                }
+                #viewListingModal .btn-close:hover {
+                    background: #e3e8ef;
+                    color: #111827;
+                    opacity: 1;
+                }
+            </style>
+            <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"><i class="fas fa-times"></i></button>
+            <div class="premium-listing-view" style="display: flex; flex-wrap: wrap; gap: 1.2rem; background: #f8fafc; border-radius: 14px; box-shadow: 0 2px 16px #0001; padding: 2.2rem 2.2rem; align-items: flex-start; max-width: 900px; margin: 0 auto; justify-content: center;">
+                <div class="premium-listing-image" style="flex: 1 1 300px; min-width: 220px; max-width: 380px; display: flex; flex-direction: column; align-items: center; position:relative;">
+                    <button class="modal-img-nav left" style="position:absolute;left:-18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.13);border:none;border-radius:50%;width:36px;height:36px;color:#2563eb;font-size:1.3rem;z-index:2;cursor:pointer;${images.length>1?'display:block':'display:none'}"><i class='fas fa-chevron-left'></i></button>
+                    <img src="${images[0]}" alt="${listing.title || 'Listing Image'}" class="premium-main-img" style="max-width: 100%; max-height: 320px; object-fit: cover; border-radius: 10px; box-shadow: 0 1px 6px #0001; border: 2px solid #fff; cursor: zoom-in; transition: box-shadow 0.2s;">
+                    <button class="modal-img-nav right" style="position:absolute;right:-18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.13);border:none;border-radius:50%;width:36px;height:36px;color:#2563eb;font-size:1.3rem;z-index:2;cursor:pointer;${images.length>1?'display:block':'display:none'}"><i class='fas fa-chevron-right'></i></button>
+                    <div style="margin-top: 0.5rem; display: flex; gap: 0.3rem;">
+                        ${images.slice(0, 4).map((img, i) => `<img src="${img}" alt="Thumbnail ${i+1}" style="width: 32px; height: 32px; object-fit: cover; border-radius: 5px; border: 1.5px solid #e3e8ef; cursor: pointer; transition: border 0.2s;" onclick="document.querySelector('.premium-main-img').src='${img}'">`).join('')}
+                    </div>
+                </div>
+                <div class="premium-listing-info" style="flex: 2 1 340px; min-width: 220px; max-width: 520px; display: flex; flex-direction: column; gap: 0.7rem; justify-content: flex-start;">
+                    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5em;">
+                        <div class="premium-listing-title" style="font-size: 1.25rem; font-weight: 800; color: #1e293b; font-family: 'Nunito', 'Segoe UI', Arial, sans-serif; letter-spacing: 0.01em; margin-bottom: 0.1em;">
+                            ${listing.title || '<span class=\'text-muted\'>Untitled</span>'}
+                        </div>
+                        <div class="listing-price-badge" style="font-size: 1.1rem; font-weight: 700; background: #22c55e; color: #fff; border-radius: 18px; padding: 0.18em 1em; margin-left: 0.5em; letter-spacing: 0.01em; min-width: 90px; text-align: right;">${formatPrice(listing.price)}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5em; margin-bottom: 0.1em;">
+                        <span class="premium-listing-status badge ${statusClass}" style="font-size: 0.93em; font-weight: 600; border-radius: 8px; padding: 0.13em 0.7em; background: #e3e8ef; color: #2563eb;">${formatStatus(listing.status)}</span>
+                    </div>
+                    <div class="premium-listing-details" style="display: flex; flex-wrap: wrap; gap: 0.7em 1.2em; font-size: 0.99em; color: #374151; margin-bottom: 0.1em;">
+                        <span><i class="fas fa-home me-1" style="color:#2563eb;"></i> ${listing.propertyType || listing.type || '<span class=\'text-muted\'>N/A</span>'}</span>
+                        <span><i class="fas fa-ruler-combined me-1" style="color:#2563eb;"></i> ${listing.area || listing.sqft || '<span class=\'text-muted\'>N/A</span>'} sq.m</span>
+                        <span><i class="fas fa-map-marker-alt me-1" style="color:#f59e42;"></i> ${listing.location || '<span class=\'text-muted\'>N/A</span>'}</span>
+                        <span><i class="fas fa-bed me-1" style="color:#2563eb;"></i> ${listing.bedrooms !== undefined ? listing.bedrooms : '<span class=\'text-muted\'>N/A</span>'} Bed${listing.bedrooms > 1 ? 's' : ''}</span>
+                        <span><i class="fas fa-bath me-1" style="color:#2563eb;"></i> ${listing.bathrooms !== undefined ? listing.bathrooms : '<span class=\'text-muted\'>N/A</span>'} Bath${listing.bathrooms > 1 ? 's' : ''}</span>
+                        ${listing.floor ? `<span><i class='fas fa-building me-1' style='color:#b197fc;'></i> Floor ${listing.floor}</span>` : ''}
+                    </div>
+                    <div class="premium-listing-features" style="margin-bottom: 0.2em;">${featuresHtml}</div>
+                    <div class="premium-listing-description" style="background: #fff; border-radius: 7px; box-shadow: 0 1px 4px #0001; padding: 0.7em 1em; font-size: 1em; color: #374151; line-height: 1.5; margin-bottom: 0.2em;">
+                        ${listing.description || '<span class=\'text-muted\'>No description provided.</span>'}
+                    </div>
+                    <div class="premium-listing-meta" style="font-size: 0.93em; color: #6b7280; display: flex; gap: 0.7em; flex-wrap: wrap; font-weight: 500; letter-spacing: 0.01em;">
+                        <span><i class="fas fa-calendar-plus me-1" style="color:#2563eb;"></i> Created: ${listing.createdAt ? new Date(listing.createdAt).toLocaleString() : 'N/A'}</span>
+                        <span><i class="fas fa-calendar-alt me-1" style="color:#2563eb;"></i> Updated: ${listing.updatedAt ? new Date(listing.updatedAt).toLocaleString() : 'N/A'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        // Modal image navigation logic
+        setTimeout(() => {
+            let currentIndex = 0;
+            const mainImg = document.querySelector('.premium-main-img');
+            const leftBtn = document.querySelector('.modal-img-nav.left');
+            const rightBtn = document.querySelector('.modal-img-nav.right');
+            if (mainImg && images.length > 1) {
+                leftBtn.style.display = rightBtn.style.display = 'block';
+                leftBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    currentIndex = (currentIndex - 1 + images.length) % images.length;
+                    mainImg.src = images[currentIndex];
+                };
+                rightBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    currentIndex = (currentIndex + 1) % images.length;
+                    mainImg.src = images[currentIndex];
+                };
+            }
+            // Click-to-enlarge for the main image
+            if (mainImg) {
+                mainImg.onclick = function() {
+                    const overlay = document.getElementById('imageLightboxOverlay');
+                    const lightboxImg = document.getElementById('lightboxImg');
+                    const lightboxPrev = document.getElementById('lightboxPrev');
+                    const lightboxNext = document.getElementById('lightboxNext');
+                    const lightboxClose = document.getElementById('lightboxClose');
+                    if (overlay && lightboxImg) {
+                        lightboxImg.src = mainImg.src;
+                        overlay.style.display = 'flex';
+                        // Set current index for lightbox
+                        let lightboxIndex = images.findIndex(img => img === mainImg.src);
+                        if (lightboxIndex === -1) lightboxIndex = 0;
+                        // Show/hide nav buttons
+                        if (images.length > 1) {
+                            lightboxPrev.style.display = lightboxNext.style.display = 'block';
+                        } else {
+                            lightboxPrev.style.display = lightboxNext.style.display = 'none';
+                        }
+                        // Lightbox navigation
+                        lightboxPrev.onclick = function(e) {
+                            e.stopPropagation();
+                            lightboxIndex = (lightboxIndex - 1 + images.length) % images.length;
+                            lightboxImg.src = images[lightboxIndex];
+                        };
+                        lightboxNext.onclick = function(e) {
+                            e.stopPropagation();
+                            lightboxIndex = (lightboxIndex + 1) % images.length;
+                            lightboxImg.src = images[lightboxIndex];
+                        };
+                        if (lightboxClose) {
+                            lightboxClose.onclick = function(e) {
+                                e.stopPropagation();
+                                overlay.style.display = 'none';
+                            };
+                        }
+                        overlay.onclick = function(e) { if (e.target === overlay) overlay.style.display = 'none'; };
+                        lightboxImg.onclick = function() { overlay.style.display = 'none'; };
+                    }
+                };
+            }
+        }, 100);
+        const modal = new bootstrap.Modal(document.getElementById('viewListingModal'));
+        modal.show();
+    }
+    // --- Filtering & Search ---
+    function getFilterOptions() {
+        const propertyType = document.getElementById('property-type').value;
+        const priceRange = document.getElementById('price-range').value;
+        const bedrooms = document.getElementById('bedrooms').value;
+        const amenities = document.getElementById('amenities').value;
+        // Build filter options
+        const options = { status: 'active' };
+        if (propertyType !== 'all') options.propertyType = propertyType;
+        if (priceRange !== 'all') {
+            if (priceRange === '3000+') { options.minPrice = 3000; }
+            else {
+            const [min, max] = priceRange.split('-');
+            if (min) options.minPrice = parseInt(min);
+            if (max) options.maxPrice = parseInt(max);
+        }
+        }
+        if (bedrooms !== 'all') {
+            if (bedrooms === 'studio') options.bedrooms = 0;
+            else if (bedrooms === '3+') options.minBedrooms = 3;
+            else options.bedrooms = parseInt(bedrooms);
+            }
+        return options;
+    }
+    async function filterListings() {
+        const options = getFilterOptions();
+        await loadListings(options);
+    }
+    async function resetFilters() {
+        document.getElementById('property-type').value = 'all';
+        document.getElementById('price-range').value = 'all';
+        document.getElementById('bedrooms').value = 'all';
+        document.getElementById('amenities').value = 'all';
+        document.getElementById('availability').value = 'all';
+        document.getElementById('searchKeyword').value = '';
+        await loadListings();
+    }
+    function searchListings() {
+        const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+        if (!keyword) {
+            renderPaginatedListings();
+            return;
+        }
+        const filtered = allListings.filter(listing => {
+            return (
+                (listing.title && listing.title.toLowerCase().includes(keyword)) ||
+                (listing.location && listing.location.toLowerCase().includes(keyword)) ||
+                (listing.description && listing.description.toLowerCase().includes(keyword)) ||
+                (listing.features && listing.features.some(f => f.toLowerCase().includes(keyword))) ||
+                (listing.amenities && listing.amenities.some(a => a.toLowerCase().includes(keyword)))
+            );
+        });
+        // Show filtered results with pagination
+        renderPublicListings(filtered.slice(0, PAGE_SIZE));
+        // Optionally, you can update pagination bar for search results if needed
+    }
+    // --- Event Listeners ---
+    document.addEventListener('DOMContentLoaded', function() {
+        loadListings();
+        document.getElementById('applyFilters').addEventListener('click', filterListings);
+        document.getElementById('resetFilters').addEventListener('click', resetFilters);
+        document.getElementById('searchButton').addEventListener('click', searchListings);
+        document.getElementById('searchKeyword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') searchListings();
+        });
+    });
+    // Attach event to all schedule buttons
+    function attachScheduleButtons() {
+      document.querySelectorAll('.schedule-viewing').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Get property title from card
+          const card = btn.closest('.listing-card');
+          const title = card ? card.querySelector('.listing-title')?.textContent?.trim() : '';
+          document.getElementById('svPropertyTitle').value = title;
+          document.getElementById('scheduleViewingForm').reset();
+          const modal = new bootstrap.Modal(document.getElementById('scheduleViewingModal'));
+          modal.show();
+        });
+      });
+    }
+    // Handle form submission
+    const scheduleForm = document.getElementById('scheduleViewingForm');
+    scheduleForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('scheduleSubmitBtn');
+      submitBtn.disabled = true;
+      const name = document.getElementById('svName').value.trim();
+      const contact = document.getElementById('svContact').value.trim();
+      const email = document.getElementById('svEmail').value.trim();
+      const date = document.getElementById('svDate').value;
+      const time = document.getElementById('svTime').value;
+      const property = document.getElementById('svPropertyTitle').value;
+      if (!name || !contact || !date || !time) {
+        submitBtn.disabled = false;
+        return;
+      }
+      // Save to Firestore bookings
+      try {
+        await window.bookingDB.addBooking({
+          name,
+          phone: contact,
+          email,
+          date,
+          time,
+          property,
+          status: 'pending',
+          source: 'public',
+        });
+        // Format time as AM/PM
+        const timeStr = time ? new Date(`1970-01-01T${time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : '';
+        // Close booking modal
+        const bookingModal = bootstrap.Modal.getInstance(document.getElementById('scheduleViewingModal'));
+        if (bookingModal) bookingModal.hide();
+        // Show confirmation modal
+        document.getElementById('confirmationDetails').innerHTML = `Thank you, <b>${name}</b>! Your viewing request for <b>${property}</b> on <b>${new Date(date).toLocaleDateString()}</b> at <b>${timeStr}</b> has been submitted. We will contact you soon.`;
+        const confirmModal = new bootstrap.Modal(document.getElementById('bookingConfirmationModal'));
+        confirmModal.show();
+        scheduleForm.reset();
+        setTimeout(() => { submitBtn.disabled = false; }, 2000);
+      } catch (err) {
+        document.getElementById('confirmationDetails').innerHTML = 'There was an error submitting your request. Please try again.';
+        document.getElementById('confirmationDetails').classList.remove('alert-success');
+        document.getElementById('confirmationDetails').classList.add('alert-danger');
+        document.getElementById('confirmationDetails').style.display = 'block';
+        submitBtn.disabled = false;
+        console.error('Booking submission error:', err);
+      }
+    };
+    </script>
 </body>
 </html> 

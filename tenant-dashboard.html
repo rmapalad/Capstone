@@ -7,6 +7,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.1.1/dist/compressor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         :root {
             --primary-color: #6366f1;
@@ -18,7 +25,7 @@
             --danger-color: #ef4444;
             --light-color: #f8fafc;
             --dark-color: #1e293b;
-            --sidebar-width: 250px;
+            --sidebar-width: 280px;
         }
 
         body {
@@ -28,7 +35,7 @@
             display: flex;
         }
 
-        /* Sidebar Styles */
+        /* ===== SIDEBAR STYLES ===== */
         .sidebar {
             width: var(--sidebar-width);
             background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
@@ -42,52 +49,67 @@
             transition: transform 0.3s;
         }
 
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .sidebar-body {
+            padding: 1.5rem;
+        }
+
         .sidebar-brand {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-nav-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-nav-link {
             display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            gap: 0.5rem;
         }
 
-        .sidebar-nav-link:hover {
+        /* Improved Sidebar Navigation */
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .sidebar .nav-link:hover {
             background: rgba(255, 255, 255, 0.1);
             color: white;
+            transform: translateX(5px);
         }
 
-        .sidebar-nav-link.active {
+        .sidebar .nav-link.active {
             background: rgba(255, 255, 255, 0.2);
             color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .sidebar-nav-link i {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
-            width: 20px;
+        .sidebar .nav-link i {
+            font-size: 1.25rem;
+            width: 24px;
             text-align: center;
         }
 
-        /* Main Content Styles */
+        /* Enhanced Main Content Styles */
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -116,20 +138,160 @@
             position: relative;
         }
 
+        /* Improved Navbar Styling */
         .navbar {
             background: white;
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.25rem 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .navbar .container-fluid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.75rem;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar-toggler:hover {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover .user-avatar {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        #userInfo {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        /* Enhanced Button Styles */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s linear;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline-primary {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-outline-primary i {
+            font-size: 1.1rem;
+        }
+
+        /* Enhanced Section Styles */
         .section {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             padding: 2rem;
             margin-bottom: 2rem;
+            transition: all 0.3s linear;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
 
         .section-header {
@@ -156,35 +318,7 @@
             font-size: 1.75rem;
         }
 
-        .top-bar {
-            background: white;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
+        /* Enhanced Stats Cards */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -261,29 +395,19 @@
             color: var(--danger-color);
         }
 
-        .card {
-            background: white;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-
+        /* Enhanced Table Styles */
         .table {
             margin-bottom: 0;
         }
 
         .table th {
-            background-color: var(--light-color);
+            background-color: #f8fafc;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
             padding: 1rem;
+            color: #64748b;
         }
 
         .table td {
@@ -295,6 +419,7 @@
             background-color: rgba(99, 102, 241, 0.05);
         }
 
+        /* Enhanced Badge Styling */
         .badge {
             padding: 0.5em 1em;
             font-weight: 600;
@@ -304,58 +429,271 @@
             letter-spacing: 0.5px;
         }
 
-        .btn {
-            padding: 0.5rem 1rem;
+        .badge.bg-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
+        }
+
+        .badge.bg-success {
+            background: linear-gradient(135deg, var(--success-color), #059669) !important;
+        }
+
+        .badge.bg-info {
+            background: linear-gradient(135deg, var(--info-color), #2563eb) !important;
+        }
+
+        .badge.bg-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
+        }
+
+        /* Date Time Picker Styles */
+        .visit-datetime-container {
+            background: linear-gradient(to bottom, #f8fafc, #ffffff);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .visit-datetime-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            color: var(--primary-color);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .visit-datetime-header i {
+            font-size: 1.25rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+        }
+
+        .visit-datetime-header h6 {
             font-weight: 600;
-            border-radius: 8px;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+
+        /* Date picker field styling */
+        .date-select-area {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .date-select-area .form-control {
+            padding-left: 2.5rem;
+            height: 48px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border: none;
+        .date-select-area .form-control:hover {
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
         }
 
-        .btn-primary:hover {
+        .date-select-area .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+        }
+
+        .date-select-area i {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        /* Time quick slots styling */
+        .slots-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .slots-section-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
+        .quick-time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .time-slot-btn {
+            padding: 0.75rem 0.5rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: var(--dark-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .time-slot-btn i {
+            color: var(--primary-color);
+            margin-right: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .time-slot-btn:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: rgba(99, 102, 241, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
         }
 
-        .btn-outline-light {
-            border: 2px solid rgba(255, 255, 255, 0.2);
+        .time-slot-btn.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .time-slot-btn.selected i {
             color: white;
         }
 
-        .btn-outline-light:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
+        /* Duration selection styling */
+        .duration-section {
+            margin-bottom: 1rem;
         }
 
-        .modal-content {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        .duration-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 0.75rem;
         }
 
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border-radius: 15px 15px 0 0;
-            padding: 1.5rem;
+        .duration-btn {
+            padding: 0.6rem 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .modal-title {
-            font-weight: 700;
+        .duration-btn:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
         }
 
-        .form-control {
+        .duration-btn.selected {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            border-color: rgba(99, 102, 241, 0.3);
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Visit summary styling */
+        .visit-summary {
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.25rem;
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+        }
+
+        .summary-header {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-detail {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-detail-label {
+            color: #6b7280;
+        }
+
+        .summary-detail-value {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        /* Time indicators */
+        .time-indicator {
+            font-size: 0.7rem;
+            color: #64748b;
+            display: inline-block;
+            margin-left: 0.25rem;
+            opacity: 0.7;
+        }
+
+        /* Flatpickr customization */
+        .flatpickr-calendar {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important;
+            border-radius: 12px !important;
+            border: none !important;
+            font-family: inherit !important;
+        }
+
+        .flatpickr-day.selected {
+            background: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--primary-color) !important;
+        }
+
+        .flatpickr-day:hover {
+            background: rgba(99, 102, 241, 0.1) !important;
+        }
+
+        .flatpickr-time input:hover,
+        .flatpickr-time .flatpickr-am-pm:hover,
+        .flatpickr-time input:focus,
+        .flatpickr-time .flatpickr-am-pm:focus {
+            background: rgba(99, 102, 241, 0.1) !important;
+        }
+
+        /* Enhanced Form Styling */
+        .form-control, .form-select {
             border-radius: 8px;
             padding: 0.75rem 1rem;
             border: 1px solid #e2e8f0;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
         }
@@ -366,49 +704,51 @@
             margin-bottom: 0.5rem;
         }
 
-        .action-buttons .btn {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.875rem;
-        }
-
-        /* Profile Section Styles */
-        .profile-card {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
+        /* Loading Animation */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
             border-radius: 50%;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 10px;
+            min-width: 300px;
+            border: none;
+        }
+
+        .toast-header {
+            border-bottom: none;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
-            font-size: 3rem;
-            font-weight: 700;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 12px 12px 0 0;
         }
 
-        .profile-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
+        .toast-body {
+            padding: 1rem;
         }
 
-        .profile-role {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Mobile Navigation Styles */
+        /* Mobile and Responsive Styling */
         @media (max-width: 768px) {
             /* Hide sidebar by default in mobile */
             .sidebar {
@@ -424,8 +764,8 @@
 
             /* Adjust main content for mobile */
             .main-content {
-                padding: 1rem;
                 margin-left: 0;
+                padding: 1rem;
             }
 
             .container-fluid {
@@ -466,45 +806,6 @@
                 margin-bottom: 1rem;
             }
 
-            .dashboard-charts {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .chart-card {
-                padding: 1.25rem;
-            }
-
-            .chart-header {
-                margin-bottom: 1rem;
-            }
-
-            .chart-title {
-                font-size: 1.1rem;
-            }
-
-            .recent-activity {
-                padding: 1.25rem;
-            }
-
-            .activity-item {
-                padding: 0.75rem 0;
-            }
-
-            .activity-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 0.9rem;
-            }
-
-            .activity-title {
-                font-size: 0.95rem;
-            }
-
-            .activity-time {
-                font-size: 0.8rem;
-            }
-
             .navbar {
                 padding: 0.75rem 1rem;
                 margin-bottom: 1.5rem;
@@ -534,30 +835,16 @@
                 font-size: 0.9rem;
             }
 
-            .table-responsive {
-                margin: 0 -1.25rem;
-                padding: 0 1.25rem;
-                width: calc(100% + 2.5rem);
+            .visit-datetime-container {
+                padding: 1rem;
             }
-
-            .table th,
-            .table td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.9rem;
+            
+            .quick-time-slots {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .action-buttons {
-                display: flex;
-                gap: 0.5rem;
-            }
-
-            .action-buttons .btn {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.8rem;
-            }
-
-            .action-buttons .btn i {
-                font-size: 0.8rem;
+            
+            .duration-picker {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -598,10 +885,6 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .dashboard-charts {
-                grid-template-columns: 1fr;
-            }
-
             .stat-card {
                 padding: 1.5rem;
             }
@@ -609,112 +892,6 @@
             .stat-value {
                 font-size: 2rem;
             }
-        }
-
-        /* Add touch-friendly styles */
-        @media (hover: none) {
-            .btn, .sidebar-nav-link, .action-buttons .btn {
-                -webkit-tap-highlight-color: transparent;
-            }
-
-            .table-hover tbody tr:active {
-                background-color: rgba(99, 102, 241, 0.1);
-            }
-
-            .stat-card:active {
-                transform: scale(0.98);
-            }
-        }
-
-        /* Add safe area insets for modern mobile browsers */
-        @supports (padding: max(0px)) {
-            .main-content {
-                padding-left: max(1rem, env(safe-area-inset-left));
-                padding-right: max(1rem, env(safe-area-inset-right));
-                padding-bottom: max(1rem, env(safe-area-inset-bottom));
-            }
-
-            .sidebar {
-                padding-left: max(1.5rem, env(safe-area-inset-left));
-                padding-right: max(1.5rem, env(safe-area-inset-right));
-            }
-        }
-
-        /* Loading Animation */
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-        }
-
-        .toast {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            margin-bottom: 10px;
-            min-width: 300px;
-        }
-
-        .toast-header {
-            border-bottom: none;
-            padding: 1rem;
-        }
-
-        .toast-body {
-            padding: 1rem;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Status Badge Colors */
-        .badge.bg-warning {
-            background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
-        }
-
-        .badge.bg-success {
-            background: linear-gradient(135deg, var(--success-color), #059669) !important;
-        }
-
-        .badge.bg-info {
-            background: linear-gradient(135deg, var(--info-color), #2563eb) !important;
-        }
-
-        .badge.bg-danger {
-            background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
         }
     </style>
 </head>
@@ -738,11 +915,23 @@
                 </a>
             </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('visitors')">
+                        <i class="fas fa-user-friends me-2"></i>
+                        <span>Register Visitor</span>
+                </a>
+            </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link" onclick="showSection('profile')">
                         <i class="fas fa-user me-2"></i>
                     <span>Profile</span>
                 </a>
             </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('payments')">
+                        <i class="fas fa-money-bill-wave me-2"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
         </ul>
         </div>
     </div>
@@ -757,9 +946,7 @@
                 </button>
                 <div class="d-flex align-items-center">
             <div class="user-info">
-                <div class="user-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
+                <img id="userAvatarImg" class="user-avatar" src="" alt="Profile Photo" style="width:45px;height:45px;object-fit:cover;border-radius:12px;">
                         <span id="userInfo" class="ms-2">Welcome, Tenant</span>
             </div>
                 </div>
@@ -827,7 +1014,8 @@
                 </div>
             </div>
 
-                <div class="recent-activity">
+                <div class="card">
+                    <div class="card-body">
                     <div class="section-header">
                         <h3 class="section-title">
                             <i class="fas fa-history"></i>
@@ -848,6 +1036,7 @@
                                 <!-- Maintenance requests will be loaded here -->
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -856,8 +1045,11 @@
         <!-- Profile Section -->
         <div id="profileSection" class="section" style="display: none;">
             <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-user me-2"></i>Profile</h2>
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </h2>
             </div>
 
             <div class="row justify-content-center">
@@ -901,6 +1093,172 @@
                 </div>
             </div>
         </div>
+
+        <!-- Visitors Section -->
+        <div id="visitorsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-friends"></i>
+                        Register Visitor
+                    </h2>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerVisitorModal">
+                            <i class="fas fa-plus"></i> New Visitor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-value" id="upcomingVisitors">0</div>
+                        <div class="stat-label">Upcoming Visitors</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-clock"></i>
+                            <span>In the next 7 days</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-value" id="todayVisitors">0</div>
+                        <div class="stat-label">Today's Visitors</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>Expected today</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="stat-value" id="pastVisitors">0</div>
+                        <div class="stat-label">Past Visitors</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-check"></i>
+                            <span>Previous 30 days</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="fas fa-list"></i>
+                                Registered Visitors
+                            </h3>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary" onclick="filterVisitors('all')">All</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="filterVisitors('upcoming')">Upcoming</button>
+                                <button type="button" class="btn btn-outline-primary" onclick="filterVisitors('past')">Past</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Visitor Name</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Purpose</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="visitorsList">
+                                    <!-- Visitors will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div id="paymentsSection" class="section" style="display: none;">
+            <div class="container-fluid">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Payments
+                    </h2>
+                </div>
+                <!-- Payments Stats Cards -->
+                <div class="dashboard-stats mb-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="stat-value" id="totalPayments">0</div>
+                        <div class="stat-label">Total Payments</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-calendar"></i>
+                            <span>This Year</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-value text-success" id="completedPayments">0</div>
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span id="completedPaymentsTrend">-</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon text-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value text-warning" id="pendingPayments">0</div>
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-clock"></i>
+                            <span id="pendingPaymentsTrend">-</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon text-info">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-value text-info" id="totalPaidThisYear">₱0</div>
+                        <div class="stat-label">Total Paid</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-calendar"></i>
+                            <span>This Year</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="paymentYearSelector" class="form-label">Select Year</label>
+                    <select id="paymentYearSelector" class="form-select" style="max-width:200px;display:inline-block;"></select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Account</th>
+                                <th>Date Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Create Maintenance Request Modal -->
@@ -909,20 +1267,83 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-plus-circle me-2"></i>New Maintenance Request
+                        <i class="fas fa-plus-circle me-2"></i>Report a Problem
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="createMaintenanceForm" onsubmit="createMaintenanceRequest(event)">
                         <div class="mb-3">
-                            <label for="maintenanceDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="maintenanceDescription" rows="3" required></textarea>
+                            <label for="maintenanceDescription" class="form-label">Please tell us what's wrong</label>
+                            <textarea class="form-control" id="maintenanceDescription" rows="4" placeholder="For example: The bathroom sink is leaking, or Sira ang ilaw sa kusina (the light in the kitchen is broken)" style="font-size: 16px;" required></textarea>
+                            <small class="form-text text-muted">
+                                You can write in English or Tagalog. Please be as detailed as you can.
+                            </small>
                         </div>
-                        <div class="text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Submit Request
+                        
+                        <div id="nlpResultsContainer" class="mb-4 d-none">
+                            <div class="alert alert-info">
+                                <h6 class="alert-heading"><i class="fas fa-robot me-2"></i>We detected the following:</h6>
+                                <div class="mb-2">
+                                    <strong>Type of problem:</strong> <span id="detectedCategory">-</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" id="editCategoryBtn">
+                                        <i class="fas fa-pencil-alt"></i> Edit
+                                    </button>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Unit:</strong> <span id="detectedUnit">-</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Area:</strong> <span id="detectedArea">-</span>
+                                </div>
+                                <div class="mb-2 d-none">
+                                    <strong>Location (raw):</strong> <span id="detectedLocation">-</span>
+                                </div>
+                                <div>
+                                    <strong>Priority:</strong> <span id="detectedUrgency">-</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Category edit dropdown (hidden by default) -->
+                            <div id="categoryEditContainer" class="d-none mb-3">
+                                <label for="categorySelect" class="form-label">Change problem type:</label>
+                                <select class="form-select" id="categorySelect">
+                                    <!-- Will be populated with categories -->
+                                </select>
+                                <button type="button" class="btn btn-sm btn-primary mt-2" id="saveCategoryBtn">
+                                    <i class="fas fa-check"></i> Save
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="cancelCategoryBtn">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="maintenanceAttachment" class="form-label">Add a photo (optional)</label>
+                            <input type="file" class="form-control" id="maintenanceAttachment" accept="image/*">
+                            <small class="form-text text-muted">A photo helps us understand the problem better</small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="permissionToEnter" checked>
+                                <label class="form-check-label" for="permissionToEnter" style="font-size: 16px;">
+                                    I give permission for maintenance staff to enter my unit to fix this problem.
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="processingMessage" class="alert alert-info d-none">
+                            <i class="fas fa-sync fa-spin me-2"></i> Processing your request...
+                        </div>
+                        
+                        <div class="text-center">
+                            <button type="button" class="btn btn-lg btn-secondary me-2" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-lg btn-primary" id="submitRequestBtn">
+                                <i class="fas fa-paper-plane me-1"></i>Submit
                             </button>
                         </div>
                     </form>
@@ -931,14 +1352,212 @@
         </div>
     </div>
 
+    <!-- Register Visitor Modal -->
+    <div class="modal fade" id="registerVisitorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus me-2"></i>Register a Visitor
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerVisitorForm" onsubmit="registerVisitor(event)">
+                        <div class="mb-3">
+                            <label for="visitorName" class="form-label">Visitor Name</label>
+                            <input type="text" class="form-control" id="visitorName" placeholder="Enter visitor's full name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="visitorPhone" class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" id="visitorPhone" placeholder="Enter visitor's contact number">
+                        </div>
+
+                        <!-- Improved Date Time Selection -->
+                        <div class="visit-datetime-container">
+                            <div class="visit-datetime-header">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h6 class="mb-0">Schedule Visit</h6>
+                            </div>
+                            
+                            <div class="date-select-area">
+                                <i class="fas fa-calendar"></i>
+                                <input type="text" class="form-control" id="visitDateTime" placeholder="Select date and time" required>
+                            </div>
+
+                            <div class="slots-section">
+                                <div class="slots-section-label">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Quick time slots</span>
+                                </div>
+                                <div class="quick-time-slots">
+                                    <button type="button" class="time-slot-btn" data-time="09:00">
+                                        <i class="fas fa-sun"></i>9:00 AM
+                                    </button>
+                                    <button type="button" class="time-slot-btn" data-time="11:00">
+                                        <i class="fas fa-sun"></i>11:00 AM
+                                    </button>
+                                    <button type="button" class="time-slot-btn" data-time="13:00">
+                                        <i class="fas fa-sun"></i>1:00 PM
+                                    </button>
+                                    <button type="button" class="time-slot-btn" data-time="15:00">
+                                        <i class="fas fa-sun"></i>3:00 PM
+                                    </button>
+                                    <button type="button" class="time-slot-btn" data-time="17:00">
+                                        <i class="fas fa-moon"></i>5:00 PM
+                                    </button>
+                                    <button type="button" class="time-slot-btn" data-time="18:00">
+                                        <i class="fas fa-moon"></i>6:00 PM
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="duration-section">
+                                <div class="slots-section-label">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <span>Visit duration</span>
+                                </div>
+                                <div class="duration-picker">
+                                    <button type="button" class="duration-btn" data-duration="1">1 hour</button>
+                                    <button type="button" class="duration-btn" data-duration="2">2 hours</button>
+                                    <button type="button" class="duration-btn" data-duration="3">3 hours</button>
+                                    <button type="button" class="duration-btn" data-duration="4">4 hours</button>
+                                    <button type="button" class="duration-btn custom-duration">Custom</button>
+                                </div>
+                            </div>
+
+                            <!-- Visit Summary Box -->
+                            <div class="visit-summary" id="visitSummary" style="display: none;">
+                                <div class="summary-header">
+                                    <i class="fas fa-clipboard-check"></i>
+                                    Visit Summary
+                                </div>
+                                <div class="summary-detail">
+                                    <span class="summary-detail-label">Date:</span>
+                                    <span class="summary-detail-value" id="summaryDate">-</span>
+                                </div>
+                                <div class="summary-detail">
+                                    <span class="summary-detail-label">Time:</span>
+                                    <span class="summary-detail-value" id="summaryTime">-</span>
+                                </div>
+                                <div class="summary-detail">
+                                    <span class="summary-detail-label">Duration:</span>
+                                    <span class="summary-detail-value" id="summaryDuration">-</span>
+                                </div>
+                            </div>
+
+                            <!-- Hidden inputs for form submission -->
+                            <input type="hidden" id="visitDate" required>
+                            <input type="hidden" id="visitTimeFrom" required>
+                            <input type="hidden" id="visitTimeTo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="visitPurpose" class="form-label">Purpose of Visit</label>
+                            <select class="form-select" id="visitPurpose" required>
+                                <option value="" selected disabled>Select purpose</option>
+                                <option value="social">Social Visit</option>
+                                <option value="family">Family Member</option>
+                                <option value="delivery">Delivery/Service</option>
+                                <option value="business">Business Meeting</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="otherPurposeContainer" style="display: none;">
+                            <label for="otherPurpose" class="form-label">Specify Purpose</label>
+                            <input type="text" class="form-control" id="otherPurpose" placeholder="Please specify the purpose">
+                        </div>
+                        <div class="mb-3">
+                            <label for="visitorPhoto" class="form-label">Visitor Photo</label>
+                            <input type="file" class="form-control" id="visitorPhoto" accept="image/*" required>
+                            <small class="form-text text-muted">Please upload a clear photo of the visitor for verification purposes.</small>
+                            <div id="photoPreview" class="mt-2" style="display: none;">
+                                <img id="visitorPhotoPreview" style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="visitorNotes" class="form-label">Additional Notes (Optional)</label>
+                            <textarea class="form-control" id="visitorNotes" rows="2" placeholder="Any special instructions or information"></textarea>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="repeatVisit">
+                            <label class="form-check-label" for="repeatVisit">This is a recurring visit</label>
+                        </div>
+                        <div class="mb-3" id="repeatOptionsContainer" style="display: none;">
+                            <label class="form-label">Repeat</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="repeatOption" id="repeatDaily" value="daily">
+                                <label class="form-check-label" for="repeatDaily">Daily</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="repeatOption" id="repeatWeekly" value="weekly">
+                                <label class="form-check-label" for="repeatWeekly">Weekly</label>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-1"></i>Register Visitor
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visitor QR Code Modal -->
+    <div class="modal fade" id="visitorQrCodeModal" tabindex="-1" aria-labelledby="visitorQrCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="visitorQrCodeModalLabel">
+                        <i class="fas fa-qrcode me-2"></i>Visitor QR Code
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Show this QR code to security for verification.</p>
+                    <div id="qrcodeDisplay" class="mb-3" style="display: flex; justify-content: center; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px;"></div>
+                    <div id="qrLinkContainer" class="mb-3">
+                        <!-- QR test link will appear here -->
+                    </div>
+                    <h6 id="qrVisitorName" class="mb-2 fw-bold"></h6>
+                    <p id="qrVisitDetails" class="text-muted"></p>
+                    <button class="btn btn-primary" onclick="printQrCode()">
+                        <i class="fas fa-print me-2"></i>Print QR Code
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadQrCode()">
+                        <i class="fas fa-download me-2"></i>Download QR Code
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/db-manager.js"></script>
+    <script src="js/complaint-manager.js"></script>
+    
+    <!-- The rest of the JavaScript remains unchanged -->
+
     <script>
+        // Store the latest NLP result to avoid redundant processing
+        let latestNlpResult = null;
+        // Current filter for visitors
+        let currentVisitorFilter = 'all';
+        
         // Initialize database and load data
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 await dbManager.initialize();
                 console.log('Database initialized successfully');
+                
+                // Initialize complaintManager
+                window.complaintManager = new ComplaintManager(dbManager);
+                console.log('ComplaintManager initialized successfully');
                 
                 // Check if user is logged in and is a tenant
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -950,14 +1569,210 @@
                 // Display user info
                 document.getElementById('userInfo').textContent = `Welcome, ${currentUser.username}`;
                 
+                // Set profile photo
+                let photoUrl = currentUser.photoUrl;
+                if (!photoUrl && window.dbManager && currentUser.id) {
+                    // Try to fetch from db if not in localStorage
+                    try {
+                        const account = await dbManager.getAccount(currentUser.id);
+                        photoUrl = account && account.photoUrl;
+                    } catch {}
+                }
+                if (!photoUrl) {
+                    photoUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(currentUser.username || 'User');
+                }
+                const avatarImg = document.getElementById('userAvatarImg');
+                if (avatarImg) avatarImg.src = photoUrl;
+                
+                // Set up event listeners for the NLP form interaction
+                setupComplaintForm();
+                
+                // Set up event listeners for visitor form
+                setupVisitorForm();
+                
                 // Load initial data
                 loadMaintenanceRequests();
+                loadVisitors();
                 loadProfile();
             } catch (error) {
                 console.error('Failed to initialize:', error);
                 alert('Failed to initialize the application. Please refresh the page.');
             }
         });
+        
+        // Global variable to cache the current user's unit name
+        let currentUnitName = null;
+        let currentUnitId = null;
+
+        // When the maintenance modal opens, fetch and cache the user's unit name
+        const maintenanceModal = document.getElementById('createMaintenanceModal');
+        if (maintenanceModal) {
+            maintenanceModal.addEventListener('show.bs.modal', async function() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                let account = currentUser;
+                if (!account.unitId && window.dbManager && currentUser.id) {
+                    account = await dbManager.getAccount(currentUser.id);
+                }
+                let unitId = account.unitId || null;
+                let unitName = null;
+                if (unitId && window.dbManager && dbManager.getAllListings) {
+                    const listings = await dbManager.getAllListings();
+                    const unit = listings.find(l => l.id === unitId);
+                    unitName = unit ? (unit.title || unit.id) : unitId;
+                }
+                currentUnitId = unitId;
+                currentUnitName = unitName;
+            });
+        }
+        
+        // Setup complaint form with NLP processing
+        function setupComplaintForm() {
+            const descriptionField = document.getElementById('maintenanceDescription');
+            const editCategoryBtn = document.getElementById('editCategoryBtn');
+            const saveCategoryBtn = document.getElementById('saveCategoryBtn');
+            const cancelCategoryBtn = document.getElementById('cancelCategoryBtn');
+            
+            // Process description when user stops typing
+            let typingTimer;
+            descriptionField.addEventListener('keyup', function() {
+                clearTimeout(typingTimer);
+                
+                // Only process if there's enough text
+                if (this.value.length > 10) {
+                    typingTimer = setTimeout(function() {
+                        processDescriptionWithNLP(descriptionField.value, currentUnitId, currentUnitName);
+                    }, 1000); // Wait 1 second after typing stops
+                } else {
+                    // Hide the NLP results if text is too short
+                    document.getElementById('nlpResultsContainer').classList.add('d-none');
+                }
+            });
+            
+            // Toggle category edit mode
+            editCategoryBtn.addEventListener('click', function() {
+                document.getElementById('categoryEditContainer').classList.remove('d-none');
+                populateCategoryDropdown();
+            });
+            
+            // Save category changes
+            saveCategoryBtn.addEventListener('click', function() {
+                const selectedCategory = document.getElementById('categorySelect').value;
+                const selectedText = document.getElementById('categorySelect').options[document.getElementById('categorySelect').selectedIndex].text;
+                document.getElementById('detectedCategory').textContent = selectedText;
+                document.getElementById('detectedCategory').dataset.value = selectedCategory;
+                document.getElementById('categoryEditContainer').classList.add('d-none');
+            });
+            
+            // Cancel category edit
+            cancelCategoryBtn.addEventListener('click', function() {
+                document.getElementById('categoryEditContainer').classList.add('d-none');
+            });
+        }
+        
+        // Populate category dropdown based on language
+        async function populateCategoryDropdown() {
+            const descriptionField = document.getElementById('maintenanceDescription');
+            const language = descriptionField.value.match(/[ñáéíóúÑÁÉÍÓÚ]|ng\s|ang\s|mga\s/) ? 'tagalog' : 'english';
+            
+            try {
+                const categories = await complaintManager.getCategories(language);
+                const dropdown = document.getElementById('categorySelect');
+                dropdown.innerHTML = '';
+                
+                for (const [key, value] of Object.entries(categories)) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = value;
+                    dropdown.appendChild(option);
+                }
+                
+                // Set current selection
+                const currentCategory = document.getElementById('detectedCategory').dataset.value;
+                if (currentCategory) {
+                    dropdown.value = currentCategory;
+                }
+            } catch (error) {
+                console.error('Failed to get categories:', error);
+            }
+        }
+        
+        // Process description with NLP
+        async function processDescriptionWithNLP(description, unitId = null, unitName = null) {
+            const processingMessage = document.getElementById('processingMessage');
+            const submitButton = document.getElementById('submitRequestBtn');
+            
+            // Disable submit button during NLP processing
+            submitButton.disabled = true;
+            processingMessage.classList.remove('d-none');
+            
+            try {
+                // Use the complaintManager instead of direct fetch to ensure consistent handling
+                const currentUser = JSON.parse(localStorage.getItem('currentUser')) || { username: 'guest' };
+                // Pass unitId and unitName to processComplaint (for fallback location logic)
+                let mockResult;
+                if (complaintManager.processComplaint.length >= 4) {
+                    // If processComplaint supports extra args
+                    mockResult = await complaintManager.processComplaint(description, currentUser.username, true, unitId, unitName);
+                } else {
+                    // Fallback for legacy
+                    mockResult = await complaintManager.processComplaint(description, currentUser.username, true);
+                    if (mockResult && (!mockResult.location || mockResult.location === 'Unspecified') && unitName) {
+                        mockResult.location = unitName;
+                    }
+                }
+                if (!mockResult || !mockResult.category) {
+                    throw new Error('Failed to process description');
+                }
+                // Store the result for later use
+                latestNlpResult = mockResult;
+                // Display NLP results
+                document.getElementById('detectedCategory').textContent = mockResult.categoryLabel || mockResult.category;
+                document.getElementById('detectedCategory').dataset.value = mockResult.category;
+                // Parse location into unit and area
+                let unitPart = '-';
+                let areaPart = '-';
+                let locationRaw = mockResult.location || (unitName || 'Unspecified');
+                console.log('[DEBUG processDescriptionWithNLP]', { locationRaw, unitName });
+                if (locationRaw && locationRaw !== 'Unspecified') {
+                    const split = locationRaw.split(' - ');
+                    if (split.length === 2) {
+                        unitPart = split[0];
+                        areaPart = split[1];
+                    } else {
+                        // If only one part, try to guess if it's a unit or area
+                        if (unitName && (locationRaw === unitName || locationRaw.startsWith(unitName))) {
+                            unitPart = unitName;
+                            // Try to extract area if present after unitName
+                            if (locationRaw.length > unitName.length + 3) {
+                                areaPart = locationRaw.substring(unitName.length + 3);
+                            }
+                        } else if (unitName) {
+                            unitPart = unitName;
+                            areaPart = locationRaw;
+                        } else {
+                            areaPart = locationRaw;
+                        }
+                    }
+                } else if (unitName) {
+                    unitPart = unitName;
+                }
+                document.getElementById('detectedUnit').textContent = unitPart;
+                document.getElementById('detectedArea').textContent = areaPart;
+                document.getElementById('detectedLocation').textContent = locationRaw;
+                document.getElementById('detectedUrgency').textContent = mockResult.urgencyLabel || mockResult.urgency;
+                // Show NLP results section
+                document.getElementById('nlpResultsContainer').classList.remove('d-none');
+            } catch (error) {
+                console.error('Failed to process description with NLP:', error);
+                // Show error message to user
+                showToast('Could not automatically analyze your description. You can still submit your request.', 'warning');
+                latestNlpResult = null;
+            } finally {
+                // Re-enable submit button and hide processing message
+                submitButton.disabled = false;
+                processingMessage.classList.add('d-none');
+            }
+        }
 
         function showSection(sectionName) {
             // Hide all sections
@@ -995,7 +1810,7 @@
 
         // Add toast notification function
         function showToast(message, type = 'success') {
-            const toastContainer = document.querySelector('.toast-container');
+            const toastContainer = document.querySelector('.toast-container') || createToastContainer();
             const toast = document.createElement('div');
             toast.className = `toast show`;
             toast.innerHTML = `
@@ -1013,28 +1828,79 @@
                 toast.remove();
             }, 3000);
         }
+        
+        // Create toast container if it doesn't exist
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+            return container;
+        }
 
         async function loadMaintenanceRequests() {
             showLoading();
             try {
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                const requests = await dbManager.getComplaints(currentUser.username);
+                const db = firebase.firestore();
+                // Get complaints for the current user
+                const querySnapshot = await db.collection('complaints')
+                    .where('tenantId', '==', currentUser.username)
+                    .get();
+                const requests = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                // Fetch all listings to map unitId to unit name
+                let listings = [];
+                if (window.dbManager && window.dbManager.getAllListings) {
+                    listings = await window.dbManager.getAllListings();
+                }
+                const getUnitName = (unitId) => {
+                    if (!unitId) return '';
+                    const unit = listings.find(l => l.id === unitId);
+                    return unit ? (unit.title || unit.id) : unitId;
+                };
                 const maintenanceList = document.getElementById('maintenanceList');
-                
                 // Update stats
                 document.getElementById('totalRequests').textContent = requests.length;
-                document.getElementById('pendingRequests').textContent = requests.filter(r => r.status === 'pending').length;
+                document.getElementById('pendingRequests').textContent = requests.filter(r => r.status === 'pending' || r.status === 'assigned').length;
                 document.getElementById('completedRequests').textContent = requests.filter(r => r.status === 'completed').length;
-                
+                if (requests.length === 0) {
+                    maintenanceList.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center">No maintenance requests found</td>
+                        </tr>
+                    `;
+                    return;
+                }
                 maintenanceList.innerHTML = requests.map(request => `
                     <tr>
                         <td>${new Date(request.createdAt).toLocaleDateString()}</td>
-                        <td>${request.description}</td>
-                        <td><span class="badge ${getStatusBadgeClass(request.status)}">${request.status}</span></td>
-                        <td>${request.notes || '-'}</td>
+                        <td>
+                            ${request.description}
+                            <div class="mt-1">
+                              ${request.category ? `<span class="badge bg-info">${request.categoryLabel || request.category}</span>` : ''}
+                                 ${request.urgency ? `<span class="badge ${getUrgencyBadgeClass(request.urgency)}">${request.urgencyLabel || request.urgency}</span>` : ''}
+                                 ${request.location ? `<span class="badge bg-secondary">${request.location}</span>` : ''}
+                              <!-- Removed: ${request.unitId ? `<span class=\"badge bg-primary\">Unit: ${getUnitName(request.unitId)}</span>` : ''} -->
+                            </div>
+                        </td>
+                        <td><span class="badge ${getStatusBadgeClass(request.status)}">${getStatusLabel(request.status)}</span></td>
+                        <td>
+                            ${request.assignedTo ? 
+                                `<div class="maintenance-contact">
+                                    <strong>${request.assignedTo.name}</strong>
+                                    <div>${request.assignedTo.category} Specialist</div>
+                                    <div><i class="fas fa-phone-alt me-1"></i>${request.assignedTo.phone}</div>
+                                </div>` : 
+                                request.notes || '-'}
+                        </td>
                     </tr>
                 `).join('');
-                showToast('Maintenance requests loaded successfully');
+                // Only show toast if there are requests
+                if (requests.length > 0) {
+                    showToast('Maintenance requests loaded successfully');
+                }
             } catch (error) {
                 console.error('Failed to load maintenance requests:', error);
                 showToast('Failed to load maintenance requests', 'error');
@@ -1046,89 +1912,626 @@
         function getStatusBadgeClass(status) {
             switch (status) {
                 case 'pending': return 'bg-warning';
-                case 'in_progress': return 'bg-info';
+                case 'assigned': return 'bg-info';
+                case 'in_progress': return 'bg-primary';
                 case 'completed': return 'bg-success';
                 case 'cancelled': return 'bg-danger';
                 default: return 'bg-secondary';
             }
         }
 
-        async function createMaintenanceRequest(event) {
+        function getStatusLabel(status) {
+            switch (status) {
+                case 'pending': return 'Pending Review';
+                case 'assigned': return 'Technician Assigned';
+                case 'in_progress': return 'In Progress';
+                case 'completed': return 'Completed';
+                case 'cancelled': return 'Cancelled';
+                default: return status.charAt(0).toUpperCase() + status.slice(1);
+            }
+        }
+
+        function getUrgencyBadgeClass(urgency) {
+            switch(urgency) {
+                case 'High': return 'bg-danger';
+                case 'Medium': return 'bg-warning';
+                case 'Low': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Setup visitor form with enhanced date time picker
+        function setupVisitorForm() {
+            const visitPurpose = document.getElementById('visitPurpose');
+            const otherPurposeContainer = document.getElementById('otherPurposeContainer');
+            const repeatVisit = document.getElementById('repeatVisit');
+            const repeatOptionsContainer = document.getElementById('repeatOptionsContainer');
+            
+            // Show/hide other purpose field based on selection
+            visitPurpose.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    otherPurposeContainer.style.display = 'block';
+                    document.getElementById('otherPurpose').setAttribute('required', true);
+                } else {
+                    otherPurposeContainer.style.display = 'none';
+                    document.getElementById('otherPurpose').removeAttribute('required');
+                }
+            });
+            
+            // Show/hide repeat options based on checkbox
+            repeatVisit.addEventListener('change', function() {
+                repeatOptionsContainer.style.display = this.checked ? 'block' : 'none';
+                // Reset radio buttons when hiding
+                if (!this.checked) {
+                    document.querySelectorAll('input[name="repeatOption"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+                }
+            });
+
+            // Enhanced Date Time Picker
+            // Get references to elements
+            const dateTimeInput = document.getElementById('visitDateTime');
+            const visitSummary = document.getElementById('visitSummary');
+            const summaryDate = document.getElementById('summaryDate');
+            const summaryTime = document.getElementById('summaryTime');
+            const summaryDuration = document.getElementById('summaryDuration');
+            const hiddenDate = document.getElementById('visitDate');
+            const hiddenTimeFrom = document.getElementById('visitTimeFrom');
+            const hiddenTimeTo = document.getElementById('visitTimeTo');
+            
+            // Track state
+            let selectedDate = null;
+            let selectedDuration = 1; // Default: 1 hour
+            
+            // Initialize Flatpickr with improved config
+            const dateTimePicker = flatpickr(dateTimeInput, {
+                enableTime: true,
+                dateFormat: "l, F j, Y at h:i K", // e.g. "Mon, January 1, 2023 at 9:00 AM"
+                minDate: "today",
+                minTime: "09:00",
+                maxTime: "18:00",
+                defaultDate: new Date(),
+                defaultHour: 9,
+                minuteIncrement: 15,
+                time_24hr: false,
+                disableMobile: false,
+                static: true,
+                onChange: function(selectedDates, dateStr) {
+                    if (selectedDates.length > 0) {
+                        selectedDate = selectedDates[0];
+                        updateSummary();
+                        
+                        // Reset time slot buttons
+                        document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                            btn.classList.remove('selected');
+                            
+                            // Check if the selected time matches a quick slot button
+                            const btnTime = btn.getAttribute('data-time');
+                            const hours = parseInt(btnTime.split(':')[0]);
+                            const minutes = parseInt(btnTime.split(':')[1] || 0);
+                            
+                            if (selectedDate.getHours() === hours && selectedDate.getMinutes() === minutes) {
+                                btn.classList.add('selected');
+                            }
+                        });
+                    }
+                },
+                onOpen: function() {
+                    document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                }
+            });
+            
+            // Quick time slot buttons
+            document.querySelectorAll('.time-slot-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const timeValue = this.getAttribute('data-time');
+                    const [hours, minutes] = timeValue.split(':').map(Number);
+                    
+                    // Get current selected date or default to today
+                    const dateToUse = selectedDate || new Date();
+                    
+                    // Set the time
+                    dateToUse.setHours(hours, minutes, 0, 0);
+                    
+                    // Update the flatpickr
+                    dateTimePicker.setDate(dateToUse);
+                    
+                    // Update selected button state
+                    document.querySelectorAll('.time-slot-btn').forEach(b => {
+                        b.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    
+                    selectedDate = dateToUse;
+                    updateSummary();
+                });
+            });
+            
+            // Duration buttons
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('custom-duration')) {
+                        // Custom duration input
+                        const customHours = prompt('Enter duration in hours (0.5 to 8):', selectedDuration.toString());
+                        if (customHours && !isNaN(customHours)) {
+                            // Parse and limit the input between 0.5 and 8 hours
+                            const parsedHours = parseFloat(customHours);
+                            selectedDuration = Math.min(Math.max(parsedHours, 0.5), 8);
+                            
+                            // Update the custom button text
+                            this.textContent = selectedDuration + ' hour' + (selectedDuration !== 1 ? 's' : '');
+                            
+                            // Update button states
+                            updateSelectedDurationButton(this);
+                            updateSummary();
+                        }
+                    } else {
+                        // Standard duration button
+                        selectedDuration = parseFloat(this.getAttribute('data-duration'));
+                        updateSelectedDurationButton(this);
+                        updateSummary();
+                    }
+                });
+            });
+            
+            // Default select first duration button
+            const firstDurationBtn = document.querySelector('.duration-btn');
+            if (firstDurationBtn) {
+                firstDurationBtn.classList.add('selected');
+            }
+            
+            // Helper to update duration button selection
+            function updateSelectedDurationButton(selectedBtn) {
+                document.querySelectorAll('.duration-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                selectedBtn.classList.add('selected');
+            }
+            
+            // Update summary box and hidden fields
+            function updateSummary() {
+                if (!selectedDate) return;
+                
+                // Format the date part (e.g., "Monday, January 1, 2023")
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = selectedDate.toLocaleDateString(undefined, options);
+                
+                // Format start time (e.g., "9:00 AM")
+                const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+                const startTime = selectedDate.toLocaleTimeString(undefined, timeOptions);
+                
+                // Calculate end time
+                const endDate = new Date(selectedDate.getTime() + selectedDuration * 60 * 60 * 1000);
+                const endTime = endDate.toLocaleTimeString(undefined, timeOptions);
+                
+                // Update summary box
+                summaryDate.textContent = formattedDate;
+                summaryTime.textContent = `${startTime} - ${endTime}`;
+                summaryDuration.textContent = `${selectedDuration} hour${selectedDuration !== 1 ? 's' : ''}`;
+                visitSummary.style.display = 'block';
+                
+                // Update hidden form fields
+                hiddenDate.value = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
+                hiddenTimeFrom.value = padZero(selectedDate.getHours()) + ':' + padZero(selectedDate.getMinutes());
+                hiddenTimeTo.value = padZero(endDate.getHours()) + ':' + padZero(endDate.getMinutes());
+            }
+            
+            // Helper to pad zeros for hours/minutes
+            function padZero(num) {
+                return num.toString().padStart(2, '0');
+            }
+            
+            // Handle photo preview with improved UI feedback
+            const photoInput = document.getElementById('visitorPhoto');
+            const photoPreview = document.getElementById('photoPreview');
+            const previewImage = document.getElementById('visitorPhotoPreview');
+            
+            photoInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (!file) {
+                    photoPreview.style.display = 'none';
+                return;
+            }
+            
+                try {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        photoPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } catch (error) {
+                    console.error('Error handling photo:', error);
+                    photoPreview.style.display = 'none';
+                }
+            });
+        }
+
+        // --- Ensure DB Compatibility Layer is Ready ---
+        async function waitForDbCompatibility() {
+            let tries = 0;
+            if (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') {
+                console.log('[waitForDbCompatibility] Waiting for DB compatibility layer to be installed...');
+            }
+            while (
+                (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') &&
+                tries < 50
+            ) {
+                await new Promise(res => setTimeout(res, 100));
+                tries++;
+                if (tries % 5 === 0) {
+                    console.log(`[waitForDbCompatibility] Still waiting... (${tries * 100}ms elapsed)`);
+                }
+            }
+            if (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') {
+                console.error('[waitForDbCompatibility] DB compatibility layer NOT installed after waiting.');
+                throw new Error('DB compatibility layer not installed');
+            } else {
+                console.log('[waitForDbCompatibility] DB compatibility layer is ready.');
+            }
+            // Initialize ComplaintManager after DB compatibility is ready
+            window.complaintManager = new ComplaintManager(window.dbManager);
+            console.log('[Init] ComplaintManager initialized:', window.complaintManager);
+        }
+
+        // Update registerVisitor to wait for compatibility
+        async function registerVisitor(event) {
             event.preventDefault();
-            
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const description = document.getElementById('maintenanceDescription').value;
-            
+            showLoading();
             try {
-                await dbManager.createComplaint({
-                    tenantId: currentUser.username,
-                    description,
-                    status: 'pending',
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                // Enforce max 10 approved/revoked visitors per tenant
+                const allVisitors = await dbManager.getVisitors(currentUser.username);
+                const approvedVisitors = allVisitors.filter(v => v.status === 'approved');
+                const revokedVisitors = allVisitors.filter(v => v.status === 'revoked');
+                if (approvedVisitors.length >= 10) {
+                    showToast('You can only have up to 10 approved visitors at a time. Please revoke or expire an existing visitor before adding a new one.', 'error');
+                    hideLoading();
+                    return;
+                }
+                if (revokedVisitors.length >= 10) {
+                    showToast('You can only have up to 10 revoked visitors at a time. Please delete or restore a revoked visitor before adding a new one.', 'error');
+                    hideLoading();
+                    return;
+                }
+                const visitorName = document.getElementById('visitorName').value;
+                const visitorPhone = document.getElementById('visitorPhone').value;
+                const visitDate = document.getElementById('visitDate').value;
+                const visitTimeFrom = document.getElementById('visitTimeFrom').value;
+                const visitTimeTo = document.getElementById('visitTimeTo').value;
+                const visitPurposeElement = document.getElementById('visitPurpose');
+                const visitPurposeCode = visitPurposeElement.value;
+                const otherPurpose = document.getElementById('otherPurpose').value;
+                const visitorNotes = document.getElementById('visitorNotes').value;
+                const isRecurring = document.getElementById('repeatVisit').checked;
+                let repeatOption = null;
+                if (isRecurring) {
+                    const selectedRepeat = document.querySelector('input[name="repeatOption"]:checked');
+                    if (selectedRepeat) {
+                        repeatOption = selectedRepeat.value;
+                    }
+                }
+                const purposeText = visitPurposeCode === 'other' ? otherPurpose : visitPurposeElement.options[visitPurposeElement.selectedIndex].text;
+                // Handle photo upload to Firebase Storage
+                const photoFile = document.getElementById('visitorPhoto').files[0];
+                let photoUrl = null;
+                let photoUploadedAt = null;
+                if (photoFile) {
+                    // Compress the image before upload
+                    const compressedFile = await new Promise((resolve, reject) => {
+                        new Compressor(photoFile, {
+                            quality: 0.6,
+                            maxWidth: 800,
+                            maxHeight: 800,
+                            success(result) { resolve(result); },
+                            error(err) { reject(err); }
+                        });
+                    });
+                    // Upload to Firebase Storage
+                    const storageRef = firebase.storage().ref();
+                    const fileName = `visitors/${currentUser.username}_${Date.now()}_${photoFile.name}`;
+                    const fileRef = storageRef.child(fileName);
+                    await fileRef.put(compressedFile);
+                    photoUrl = await fileRef.getDownloadURL();
+                    photoUploadedAt = new Date().toISOString();
+                }
+                const visitor = {
+                        tenantId: currentUser.username,
+                    visitorName,
+                    visitorPhone,
+                    visitDate,
+                    visitTimeFrom,
+                    visitTimeTo,
+                    visitPurpose: purposeText,
+                    visitPurposeCode: visitPurposeCode,
+                    visitorNotes,
+                    isRecurring,
+                    repeatOption,
+                    status: 'approved',
+                    photoUrl: photoUrl || null,
+                    photoUploadedAt: photoUploadedAt || null,
                     createdAt: new Date().toISOString()
+                };
+                const visitorId = await dbManager.createVisitor(visitor);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('registerVisitorModal'));
+                modal.hide();
+                document.getElementById('registerVisitorForm').reset();
+                document.getElementById('otherPurposeContainer').style.display = 'none';
+                document.getElementById('repeatOptionsContainer').style.display = 'none';
+                await loadVisitors();
+                showToast('Visitor registered successfully');
+                showVisitorQrCode(visitorId, visitorName, visitDate, `${formatTime(visitTimeFrom)} - ${formatTime(visitTimeTo)}`);
+            } catch (error) {
+                console.error('Failed to register visitor:', error);
+                showToast('Failed to register visitor', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Update loadVisitors to wait for compatibility
+        async function loadVisitors() {
+            showLoading();
+            try {
+                await waitForDbCompatibility();
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const visitors = await dbManager.getVisitors(currentUser.username);
+                const visitorsList = document.getElementById('visitorsList');
+                // Auto-expire logic
+                const now = new Date();
+                for (const visitor of visitors) {
+                    if (visitor.status === 'approved' && visitor.visitDate && visitor.visitTimeTo) {
+                        // Combine visitDate and visitTimeTo into a Date object
+                        const visitEnd = new Date(visitor.visitDate + 'T' + visitor.visitTimeTo);
+                        if (now > visitEnd) {
+                            // Update status to expired in Firestore
+                            await dbManager.updateVisitor(visitor.id, { status: 'expired' });
+                            visitor.status = 'expired';
+                        }
+                    }
+                }
+                
+                // Apply current filter
+                const filteredVisitors = filterVisitorsByDate(visitors, currentVisitorFilter);
+                
+                // Update stats
+                const today = new Date().toISOString().split('T')[0];
+                const todayVisitors = visitors.filter(v => v.visitDate === today).length;
+                
+                const upcoming = visitors.filter(v => {
+                    return new Date(v.visitDate) >= new Date() && v.visitDate !== today;
+                }).length;
+                
+                const past = visitors.filter(v => new Date(v.visitDate) < new Date()).length;
+                
+                document.getElementById('upcomingVisitors').textContent = upcoming;
+                document.getElementById('todayVisitors').textContent = todayVisitors;
+                document.getElementById('pastVisitors').textContent = past;
+                
+                if (filteredVisitors.length === 0) {
+                    visitorsList.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center">No visitors found</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Add regular visitor rows
+                let visitorRows = filteredVisitors.map(visitor => `
+                    <tr>
+                        <td>${visitor.visitorName}</td>
+                        <td>${formatDate(visitor.visitDate)}</td>
+                        <td>${formatTime(visitor.visitTimeFrom)} - ${formatTime(visitor.visitTimeTo)}</td>
+                        <td>
+                            <span class="badge ${getPurposeBadgeClass(visitor.visitPurposeCode)}">${visitor.visitPurpose}</span>
+                            ${visitor.isRecurring ? '<span class="badge bg-info ms-1">Recurring</span>' : ''}
+                        </td>
+                        <td><span class="badge ${getVisitorStatusBadgeClass(visitor.status)}">${getVisitorStatusLabel(visitor.status)}</span></td>
+                        <td class="action-buttons">
+                            <div class="d-flex gap-2">
+                                ${visitor.status === 'revoked' ? 
+                                `<button class="btn btn-success revoke-btn" data-visitor-id="${visitor.id}">
+                                    <i class="fas fa-check-circle me-1"></i> Restore Access
+                                </button>` :
+                                `<button class="btn btn-warning revoke-btn" data-visitor-id="${visitor.id}">
+                                    <i class="fas fa-ban me-1"></i> Revoke
+                                </button>`}
+                                <button class="btn btn-info btn-sm view-qr-btn" data-visitor-id="${visitor.id}" data-visitor-name="${visitor.visitorName}" data-visit-date="${visitor.visitDate}" data-visit-time="${formatTime(visitor.visitTimeFrom)} - ${formatTime(visitor.visitTimeTo)}">
+                                    <i class="fas fa-qrcode"></i> QR
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                visitorsList.innerHTML = visitorRows;
+                
+                // Initialize tooltips for newly added elements
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
                 
-                // Close modal and reset form
-                const modal = bootstrap.Modal.getInstance(document.getElementById('createMaintenanceModal'));
-                modal.hide();
-                document.getElementById('createMaintenanceForm').reset();
-                
-                // Reload maintenance requests
-                loadMaintenanceRequests();
-                
-                alert('Maintenance request submitted successfully');
+                // Add event listeners to revoke buttons using delegation
+                document.getElementById('visitorsList').addEventListener('click', function(e) {
+                    const revokeButton = e.target.closest('.revoke-btn');
+                    if (revokeButton) {
+                        const visitorId = revokeButton.getAttribute('data-visitor-id');
+                        revokeVisitor(visitorId);
+                        return; // Prevent further actions if revoke button was clicked
+                    }
+
+                    const qrButton = e.target.closest('.view-qr-btn');
+                    if (qrButton) {
+                        const visitorId = qrButton.getAttribute('data-visitor-id');
+                        const visitorName = qrButton.getAttribute('data-visitor-name');
+                        const visitDate = qrButton.getAttribute('data-visit-date');
+                        const visitTime = qrButton.getAttribute('data-visit-time');
+                        showVisitorQrCode(visitorId, visitorName, visitDate, visitTime);
+                    }
+                });
             } catch (error) {
-                console.error('Failed to create maintenance request:', error);
-                alert('Failed to submit maintenance request. Please try again.');
+                console.error('Failed to load visitors:', error);
+                showToast('Failed to load visitors', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function filterVisitors(filter) {
+            currentVisitorFilter = filter;
+            loadVisitors();
+            
+            // Update active button state
+            document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function filterVisitorsByDate(visitors, filter) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            switch(filter) {
+                case 'upcoming':
+                    return visitors.filter(v => new Date(v.visitDate) >= today);
+                case 'past':
+                    return visitors.filter(v => new Date(v.visitDate) < today);
+                case 'all':
+                default:
+                    return visitors.sort((a, b) => new Date(a.visitDate) - new Date(b.visitDate));
+            }
+        }
+
+        // Update revokeVisitor to wait for compatibility
+        async function revokeVisitor(visitorId) {
+            try {
+                await waitForDbCompatibility();
+                // Find the button for this visitor
+                const button = document.querySelector(`.revoke-btn[data-visitor-id="${visitorId}"]`);
+                if (!button) {
+                    throw new Error("Button not found for visitor ID: " + visitorId);
+                }
+                const isCurrentlyRevoked = button.classList.contains('btn-success');
+                // Toggle status between approved and revoked
+                const newStatus = isCurrentlyRevoked ? 'approved' : 'revoked';
+                const confirmMessage = newStatus === 'revoked' 
+                    ? 'Are you sure you want to revoke access for this visitor? This will notify security that this visitor should not be allowed entry.'
+                    : 'Are you sure you want to restore access for this visitor? This will allow the visitor entry again.';
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                // Update visitor status
+                try {
+                    // Use visitorId string directly
+                    const visitor = await dbManager.getVisitor(visitorId);
+                    if (!visitor) {
+                        throw new Error("Visitor not found with ID: " + visitorId);
+                    }
+                    await dbManager.updateVisitor(visitorId, { status: newStatus });
+                    // Add debug logging
+                    console.log('Successfully updated visitor:', {
+                        id: visitorId,
+                        newStatus: newStatus,
+                        visitor: visitor
+                    });
+                } catch (updateError) {
+                    console.error('Error details:', updateError);
+                    throw updateError;
+                }
+                // Show appropriate toast message
+                if (newStatus === 'revoked') {
+                    showToast('Visitor access has been revoked', 'warning');
+                } else {
+                    showToast('Visitor access has been restored', 'success');
+                }
+                // Reload visitors
+                await loadVisitors();
+            } catch (error) {
+                console.error('Failed to update visitor:', error);
+                showToast('Failed to update visitor access: ' + error.message, 'error');
             }
         }
 
         async function loadProfile() {
             try {
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                const account = await dbManager.getAccount(currentUser.username);
+                const db = firebase.firestore();
                 
-                if (account) {
+                // Get account from Firestore using username query
+                const snapshot = await db.collection('accounts')
+                    .where('username', '==', currentUser.username)
+                    .get();
+                    
+                if (!snapshot.empty) {
+                    const account = snapshot.docs[0].data();
                     document.getElementById('username').value = account.username;
                     document.getElementById('profileUsername').textContent = account.username;
+                } else {
+                    showToast('Account not found', 'error');
                 }
             } catch (error) {
                 console.error('Failed to load profile:', error);
-                alert('Failed to load profile information. Please refresh the page.');
+                showToast('Failed to load profile information', 'error');
             }
         }
 
         async function updateProfile(event) {
             event.preventDefault();
-            
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('New passwords do not match');
-                return;
-            }
+            showLoading();
             
             try {
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                const account = await dbManager.getAccount(currentUser.username);
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
                 
-                if (account.password !== currentPassword) {
-                    alert('Current password is incorrect');
+                if (newPassword !== confirmPassword) {
+                    showToast('New passwords do not match', 'error');
                     return;
                 }
                 
-                await dbManager.updateAccount(currentUser.username, {
-                    password: newPassword
+                const db = firebase.firestore();
+                
+                // Get current account data using username query
+                const snapshot = await db.collection('accounts')
+                    .where('username', '==', currentUser.username)
+                    .get();
+                    
+                if (snapshot.empty) {
+                    showToast('Account not found', 'error');
+                    return;
+                }
+                
+                const accountDoc = snapshot.docs[0];
+                const account = accountDoc.data();
+                
+                // Verify current password
+                if (account.password !== currentPassword) {
+                    showToast('Current password is incorrect', 'error');
+                    return;
+                }
+                
+                // Update password in Firestore using document ID from the query
+                await db.collection('accounts').doc(accountDoc.id).update({
+                    password: newPassword,
+                    updatedAt: new Date().toISOString()
                 });
                 
                 // Reset form
                 document.getElementById('profileForm').reset();
                 
-                alert('Profile updated successfully');
+                showToast('Profile updated successfully');
             } catch (error) {
                 console.error('Failed to update profile:', error);
-                alert('Failed to update profile. Please try again.');
+                showToast('Failed to update profile', 'error');
+            } finally {
+                hideLoading();
             }
         }
 
@@ -1193,7 +2596,387 @@
                 sidebar.style.transform = 'translateX(-100%)';
                 mainContent.style.marginLeft = '0';
             }
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
+
+        function formatDate(dateString) {
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function formatTime(timeString) {
+            return timeString;
+        }
+
+        function getPurposeBadgeClass(purpose) {
+            switch(purpose) {
+                case 'social': return 'bg-primary';
+                case 'family': return 'bg-success';
+                case 'delivery': return 'bg-warning';
+                case 'business': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        }
+        
+        // Add 'expired' badge style to getVisitorStatusBadgeClass
+        function getVisitorStatusBadgeClass(status) {
+            switch(status) {
+                case 'pending': return 'bg-warning';
+                case 'approved': return 'bg-success';
+                case 'revoked': return 'bg-dark';
+                case 'expired': return 'bg-secondary text-white';
+                default: return 'bg-secondary';
+            }
+        }
+        
+        // Add 'Expired' label to getVisitorStatusLabel
+        function getVisitorStatusLabel(status) {
+            switch(status) {
+                case 'pending': return 'Registered';
+                case 'approved': return 'Approved';
+                case 'revoked': return 'Access Revoked';
+                case 'expired': return 'Expired';
+                default: return status.charAt(0).toUpperCase() + status.slice(1);
+            }
+        }
+
+        // QR Code Functions
+        let qrCodeInstance = null; // Keep a reference to the QRCode instance
+
+        function showVisitorQrCode(visitorId, visitorName, visitDate, visitTime) {
+            const qrCodeDisplay = document.getElementById('qrcodeDisplay');
+            qrCodeDisplay.innerHTML = ''; // Ensure the container is completely empty
+
+            // Construct the URL for the verification page
+            const verificationUrl = `${window.location.origin}/visitor-verify.html?visitorId=${visitorId}`;
+            console.log("Generating QR for URL:", verificationUrl);
+
+            // Always create a new QRCode instance to ensure freshness
+            // This can be more reliable than qrCodeInstance.clear() and qrCodeInstance.makeCode()
+            // if the library has issues with re-rendering on the same canvas/element after clearing.
+            try {
+                qrCodeInstance = new QRCode(qrCodeDisplay, {
+                    text: verificationUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                console.error("Error creating QRCode:", e);
+                qrCodeDisplay.innerHTML = "Error generating QR code. Please try again.";
+                // Fallback or error display if QRCode instantiation fails
+            }
+
+            document.getElementById('qrVisitorName').textContent = visitorName;
+            document.getElementById('qrVisitDetails').textContent = `Date: ${formatDate(visitDate)}, Time: ${visitTime}`;
+
+            // Add the clickable link below the QR code
+            const qrLinkContainer = document.getElementById('qrLinkContainer');
+            if (qrLinkContainer) {
+                qrLinkContainer.innerHTML = `<a href="${verificationUrl}" target="_blank">Test Link: Verify Visitor</a>`;
+            }
+
+            const qrModalElement = document.getElementById('visitorQrCodeModal');
+            const qrModal = bootstrap.Modal.getInstance(qrModalElement) || new bootstrap.Modal(qrModalElement);
+            qrModal.show();
+        }
+
+        function printQrCode() {
+            const qrModalContent = document.getElementById('visitorQrCodeModal').querySelector('.modal-content').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Visitor QR Code</title>
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                        <style>
+                            body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+                            .modal-content { border: 1px solid #ccc; padding: 20px; text-align: center; }
+                            #qrcodeDisplay img { max-width: 100%; height: auto; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="modal-content">
+                            ${qrModalContent}
+                        </div>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            // Delay print to allow content to load - might need adjustment
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+
+        function downloadQrCode() {
+            // Find the QR code image inside the display div
+            const qrImg = document.querySelector('#qrcodeDisplay img');
+            if (!qrImg) {
+                alert('QR code image not found. Please try again.');
+                return;
+            }
+            // Create a temporary link to trigger download
+            const link = document.createElement('a');
+            link.href = qrImg.src;
+            link.download = 'visitor-qr-code.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        async function createMaintenanceRequest(event) {
+            event.preventDefault();
+            showLoading();
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const description = document.getElementById('maintenanceDescription').value;
+                // Fetch account and unit info
+                let account = currentUser;
+                if (!account.unitId && window.dbManager && currentUser.id) {
+                    account = await dbManager.getAccount(currentUser.id);
+                }
+                let unitId = account.unitId || null;
+                let unitName = null;
+                if (unitId && window.dbManager && dbManager.getAllListings) {
+                    const listings = await dbManager.getAllListings();
+                    const unit = listings.find(l => l.id === unitId);
+                    unitName = unit ? (unit.title || unit.id) : unitId;
+                }
+                // Create the complaint object
+                let complaint = {
+                    tenantId: currentUser.username,
+                    description: description,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    unitId: unitId,
+                    unitName: unitName
+                };
+                // Add NLP results if available
+                if (latestNlpResult) {
+                    Object.assign(complaint, latestNlpResult);
+                }
+                // If no location or if location is 'Unspecified', set to unitName
+                if (!complaint.location || complaint.location === 'Unspecified') {
+                    if (unitName) complaint.location = unitName;
+                }
+                // Create the complaint directly in Firestore
+                const db = firebase.firestore();
+                const docRef = await db.collection('complaints').add(complaint);
+                if (!docRef.id) {
+                    throw new Error('Failed to create complaint');
+                }
+                // Close modal and reset form
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createMaintenanceModal'));
+                modal.hide();
+                document.getElementById('createMaintenanceForm').reset();
+                document.getElementById('nlpResultsContainer').classList.add('d-none');
+                latestNlpResult = null;
+                // Reload maintenance requests
+                await loadMaintenanceRequests();
+                showToast('Maintenance request submitted successfully');
+            } catch (error) {
+                console.error('Failed to create maintenance request:', error);
+                showToast('Failed to submit maintenance request. Please try again.', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadPaymentsSection() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const db = firebase.firestore();
+            const yearSelector = document.getElementById('paymentYearSelector');
+            const paymentsTableBody = document.getElementById('paymentsTableBody');
+            if (!currentUser || !currentUser.id) return;
+
+            // Get the current user's account to find their unitId
+            const account = await dbManager.getAccount(currentUser.id);
+            if (!account || !account.unitId) {
+                paymentsTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No unit assigned to your account.</td></tr>';
+                return;
+            }
+            const unitId = account.unitId;
+
+            // Fetch all listings to get the unit name
+            const listings = await dbManager.getAllListings();
+            const unit = listings.find(l => l.id === unitId);
+            const unitName = unit ? (unit.title || unit.id) : unitId;
+            // Show the unit name above the table
+            let unitNameDiv = document.getElementById('paymentsUnitName');
+            if (!unitNameDiv) {
+                unitNameDiv = document.createElement('div');
+                unitNameDiv.id = 'paymentsUnitName';
+                unitNameDiv.className = 'mb-2 fw-bold';
+                yearSelector.parentElement.insertBefore(unitNameDiv, yearSelector);
+            }
+            unitNameDiv.textContent = `Apartment Unit: ${unitName}`;
+
+            // Get all payments for this unit (any tenant)
+            const snapshot = await db.collection('payments')
+                .where('unitId', '==', unitId)
+                .get();
+            const payments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const years = Array.from(new Set(payments.map(p => new Date(p.date).getFullYear())));
+            const currentYear = new Date().getFullYear();
+            if (!years.includes(currentYear)) years.push(currentYear);
+            years.sort((a, b) => b - a);
+
+            // Populate year selector
+            yearSelector.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+            yearSelector.value = currentYear;
+
+            // Get all accounts for mapping tenantId to username
+            const accounts = await dbManager.getAllAccounts();
+
+            function renderPaymentsTable(selectedYear) {
+                const months = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                paymentsTableBody.innerHTML = months.map((month, idx) => {
+                    const payment = payments.find(p => {
+                        if (!p.date) return false;
+                        const d = new Date(p.date);
+                        return d.getFullYear() === selectedYear && d.getMonth() === idx;
+                    });
+                    let accountCell = '-';
+                    if (payment && payment.tenantId) {
+                        const acc = accounts.find(a => a.id === payment.tenantId);
+                        accountCell = acc ? acc.username : payment.tenantId;
+                    }
+                    return `<tr>
+                        <td>${month}</td>
+                        <td>${payment ? `<span class="badge bg-${getStatusColor(payment.status)}">${capitalize(payment.status)}</span>` : '<span class="badge bg-secondary">Unpaid</span>'}</td>
+                        <td>${payment ? `₱${parseFloat(payment.amount).toLocaleString()}` : '-'}</td>
+                        <td>${payment ? capitalize(payment.paymentMethod.replace('_', ' ')) : '-'}</td>
+                        <td>${payment ? accountCell : '-'}</td>
+                        <td>${payment ? new Date(payment.date).toLocaleDateString() : '-'}</td>
+                    </tr>`;
+                }).join('');
+            }
+
+            function updateStats(selectedYear) {
+                const yearPayments = payments.filter(p => {
+                    if (!p.date) return false;
+                    const d = new Date(p.date);
+                    return d.getFullYear() === selectedYear;
+                });
+                document.getElementById('totalPayments').textContent = yearPayments.length;
+                const completed = yearPayments.filter(p => p.status === 'completed');
+                document.getElementById('completedPayments').textContent = completed.length;
+                const pending = yearPayments.filter(p => p.status === 'pending');
+                document.getElementById('pendingPayments').textContent = pending.length;
+                const totalPaid = completed.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+                document.getElementById('totalPaidThisYear').textContent = `₱${totalPaid.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+
+            yearSelector.onchange = () => {
+                const selectedYear = Number(yearSelector.value);
+                renderPaymentsTable(selectedYear);
+                updateStats(selectedYear);
+            };
+            renderPaymentsTable(currentYear);
+            updateStats(currentYear);
+        }
+
+        // Extend showSection to load payments when needed
+        const originalShowSection = showSection;
+        showSection = function(sectionName) {
+            originalShowSection(sectionName);
+            if (sectionName === 'payments') {
+                setTimeout(() => loadPaymentsSection(), 0); // Always reload payments
+            }
+        };
+
+        // Helper for payment status badge color
+        function getStatusColor(status) {
+            switch (status) {
+                case 'completed': return 'success';
+                case 'pending': return 'warning';
+                case 'failed': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        // Helper for capitalizing strings
+        function capitalize(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    </script>
+    
+    <!-- Firebase and Sync Scripts (keep only one set) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
+    <!-- Database Scripts (keep only one set) -->
+    <script src="js/db-manager.js"></script>
+    <script src="js/auth-helper.js"></script>
+
+    <!-- Main Logic Script: Move this entire <script> block to here, after all libraries -->
+    <script>
+    // --- Ensure DB Compatibility Layer is Ready ---
+    async function waitForDbCompatibility() {
+        let tries = 0;
+        if (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') {
+            console.log('[waitForDbCompatibility] Waiting for DB compatibility layer to be installed...');
+        }
+        while (
+            (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') &&
+            tries < 50
+        ) {
+            await new Promise(res => setTimeout(res, 100));
+            tries++;
+            if (tries % 5 === 0) {
+                console.log(`[waitForDbCompatibility] Still waiting... (${tries * 100}ms elapsed)`);
+            }
+        }
+        if (!window.dbManager || typeof window.dbManager.createVisitor !== 'function') {
+            console.error('[waitForDbCompatibility] DB compatibility layer NOT installed after waiting.');
+            throw new Error('DB compatibility layer not installed');
+        } else {
+            console.log('[waitForDbCompatibility] DB compatibility layer is ready.');
+        }
+    }
+    // ... (rest of your main logic JS code, unchanged) ...
+    </script>
+
+    <script>
+    // Manual fix: Force install compatibility layer if not present
+    if (window.dbManager && typeof window.dbManager.createVisitor !== 'function') {
+        if (typeof window.installCompatibilityLayer === 'function') {
+            window.installCompatibilityLayer();
+            console.log('[Manual Fix] Forced installation of DB compatibility layer after all scripts loaded.');
+        } else {
+            console.error('installCompatibilityLayer is not available on window');
+        }
+    }
+    console.log('[Diagnostics] window.dbManager:', window.dbManager);
+    console.log('[Diagnostics] typeof window.dbManager.createVisitor:', typeof window.dbManager.createVisitor);
+    console.log('[Diagnostics] dbManager constructor:', window.dbManager && window.dbManager.constructor && window.dbManager.constructor.name);
+    </script>
+
+    <script>
+    // Ultimate Fix: Directly replace dbManager with DBCompatibilityLayer if needed
+    if (window.DBCompatibilityLayer && window.dbManager) {
+        window.dbManager = new window.DBCompatibilityLayer(window.dbManager);
+        console.log('[Ultimate Fix] Directly replaced dbManager with DBCompatibilityLayer.');
+        console.log('[Diagnostics] typeof window.dbManager.createVisitor:', typeof window.dbManager.createVisitor);
+        console.log('[Diagnostics] dbManager constructor:', window.dbManager.constructor && window.dbManager.constructor.name);
+    } else {
+        console.error('DBCompatibilityLayer or dbManager not available on window');
+    }
     </script>
 </body>
-</html> 
+</html>

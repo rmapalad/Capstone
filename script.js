@@ -178,19 +178,119 @@ document.addEventListener('DOMContentLoaded', function() {
     
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const icon = question.querySelector('i');
         
         question.addEventListener('click', () => {
-            // Close all other items
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item && otherItem.classList.contains('active')) {
-                    otherItem.classList.remove('active');
-                }
-            });
-            
-            // Toggle current item
-            item.classList.toggle('active');
+            const isOpen = answer.style.display === 'block';
+            answer.style.display = isOpen ? 'none' : 'block';
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
         });
     });
+
+    // Online status indicator
+    const onlineStatusIndicator = document.getElementById('online-status');
+    
+    function updateOnlineStatus() {
+        if (navigator.onLine) {
+            onlineStatusIndicator.classList.remove('offline');
+            onlineStatusIndicator.classList.add('online');
+            onlineStatusIndicator.title = 'Online';
+        } else {
+            onlineStatusIndicator.classList.remove('online');
+            onlineStatusIndicator.classList.add('offline');
+            onlineStatusIndicator.title = 'Offline';
+        }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus(); // Initial check
+
+    // Firebase DB status indicator (placeholder - requires Firebase SDK integration)
+    const dbStatusIndicator = document.getElementById('db-status');
+
+    // This is a simplified example. You'll need to integrate with Firebase SDK's
+    // connection status or data synchronization events for a real implementation.
+    function updateDbStatus(status) { // status can be 'synced', 'pending', 'error'
+        dbStatusIndicator.classList.remove('synced', 'pending', 'error', 'offline'); // Remove all possible states
+        dbStatusIndicator.classList.add(status);
+        dbStatusIndicator.title = `DB: ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+    }
+
+    // Placeholder: Assume synced initially. 
+    // Replace this with actual Firebase connection/sync logic.
+    updateDbStatus('pending'); // Initial state, will be updated by Firebase
+
+    // You'll need to import and initialize Firebase if you haven't already
+    // For example, in your firebase-config.js or here:
+    // import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    // import { getFirestore, onSnapshot, collection } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+    // import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    
+    // Example for Firestore (make sure db is initialized from firebase-config.js or init-sync.js)
+    // This requires `db` to be an initialized Firestore instance.
+    // You might need to export `db` from firebase-config.js and import it here.
+    // For this example, I'll assume `window.db` might be available if initialized globally from init-sync.js
+    
+    // Check if Firebase services are available (loaded via module scripts)
+    // We'll wait for a bit to ensure firebase-config and init-sync have run.
+    setTimeout(() => {
+        console.log('DB Status Check: Attempting to find window.db. Current value:', window.db); // Enhanced log
+        if (window.db) { // Assuming 'db' is your Firestore instance, made global by init-sync.js or firebase-config.js
+            try {
+                // A simple way to check connectivity is to try to listen to a non-critical path
+                // or use Firebase's built-in connection status if available in the version you are using.
+                // For Firestore, there isn't a direct 'connection state' event like Realtime Database.
+                // Instead, you can monitor a specific document or collection for changes or errors.
+                // Here's a very basic check: try to get server timestamp (which requires connection)
+                const { serverTimestamp, doc, getDoc, onSnapshot, collection } = window.firebaseFirestore; // Assuming these are exposed or imported
+
+                if (!serverTimestamp || !doc || !getDoc || !onSnapshot || !collection) {
+                    console.warn('Firebase Firestore functions not available on window.firebaseFirestore. DB status check might be limited.');
+                    updateDbStatus('error'); // Indicate an issue with Firebase setup
+                    return;
+                }
+
+                updateDbStatus('pending'); // Set to pending while we check
+
+                // For a more robust check, you might listen to metadata changes on a query
+                // or use the .info/connected path if using Realtime Database.
+                // For Firestore, a common pattern is to assume connected and handle errors.
+                // Here, we'll try a simple health check by listening to a dummy document or a known collection.
+                // Let's try to listen to metadata of a dummy collection to infer connectivity.
+                const healthCheckCol = collection(window.db, '_healthcheck');
+                const unsubscribe = onSnapshot(healthCheckCol, 
+                    (snapshot) => {
+                        // If we get a snapshot (even if empty), we are likely connected and synced.
+                        // You might want more sophisticated logic based on `snapshot.metadata.fromCache`
+                        // or `snapshot.metadata.hasPendingWrites`.
+                        if (!snapshot.metadata.fromCache) {
+                            updateDbStatus('synced');
+                        } else {
+                            // It's from cache, could mean offline or just fast local serving
+                            // For simplicity, we'll assume synced if we get any callback without error.
+                            // A better check would be to try a small write or use serverTimestamp.
+                            updateDbStatus('synced'); // Simplified
+                        }
+                    }, 
+                    (error) => {
+                        console.error("Firebase connection error:", error);
+                        updateDbStatus('error');
+                    }
+                );
+                // Note: Remember to unsubscribe when the component/page unloads if necessary.
+            } catch (e) {
+                console.error('Error setting up Firebase DB status listener:', e);
+                updateDbStatus('error');
+            }
+        } else {
+            console.warn('DB Status Check: Firebase db instance (window.db) was NOT found after timeout. DB status will remain Offline. Please check browser console for errors related to Firebase SDKs or the execution of js/firebase-config.js.'); // Enhanced log
+            updateDbStatus('offline'); // Or 'error' or 'pending' depending on how you want to represent this
+        }
+    }, 4000); // Wait 4 seconds for Firebase scripts to load and initialize
+
 });
 
 // Listings Page Functionality

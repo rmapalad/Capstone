@@ -1,0 +1,66 @@
+Visitor & Tenant Logs System Plan
+================================
+
+1. Data Flow Overview
+---------------------
+- RFID logs are recorded in a Google Sheet (Date, Time, RFID tag).
+- Accounts (tenants/staff) in Firestore have an assigned RFID tag.
+- Visitors are registered in Firestore and can enter via QR code.
+- Logs Table on the website should show: Date, Time, RFID, Name, and Entry Method (RFID/QR).
+
+2. Google Sheets Integration
+---------------------------
+- Use Google Apps Script to expose the sheet as a public JSON API.
+- Fetch the data using fetch() in frontend JS.
+
+3. Assigning RFID Tags to Accounts
+----------------------------------
+- Add an rfid field to each account document in Firestore.
+- Admin UI: Allow editing/assigning RFID tags to accounts.
+
+4. Matching and Merging Logs
+----------------------------
+- Fetch RFID logs from Google Sheets.
+- Fetch accounts from Firestore (with rfid and name).
+- For each RFID log: match to account by rfid, get name, mark as 'RFID' entry.
+- Fetch visitor QR logs from Firestore (from visitors collection or logs collection).
+- Combine both sources for display.
+
+5. Displaying Logs on the Website
+---------------------------------
+- In the admin dashboard, add a section for Visitor & Tenant Logs.
+- Populate the logs table with merged data: Date & Time, Name, Type, Purpose, Status, Entry Method (RFID/QR).
+
+6. Implementation Steps
+-----------------------
+A. Google Sheets Web API (Apps Script)
+   - Write and deploy a script to expose the sheet as JSON.
+B. Fetch and Merge in Frontend
+   - Fetch RFID logs, accounts, and visitor logs; merge and display.
+C. Firestore Account Schema
+   - Ensure each account has an rfid field.
+D. (Optional) Store Combined Logs in Firestore
+   - For performance, periodically sync and store combined logs in a logs collection.
+
+7. Security Considerations
+-------------------------
+- Restrict access to logs page to admins.
+- Use Google Sheets API with a backend proxy for more security if needed.
+
+8. Example Table
+----------------
+| Date       | Time   | RFID         | Name         | Type    | Entry Method | Purpose | Status   |
+|------------|--------|--------------|--------------|---------|--------------|---------|----------|
+| 2024-06-01 | 08:00  | 1234567890AB | John Smith   | Tenant  | RFID         | -       | Success  |
+| 2024-06-01 | 09:15  | -            | Jane Visitor | Visitor | QR           | Delivery| Approved |
+| 2024-06-01 | 10:00  | 0987654321CD | Unregistered | Unknown | RFID         | -       | Failed   |
+
+9. Next Steps
+-------------
+- Set up the Apps Script API for your Google Sheet.
+- Add/Update the rfid field in Firestore accounts.
+- Implement the fetch/merge logic in your admin dashboard JS.
+- Test and refine the UI for the logs table.
+
+---
+End of Plan. 
